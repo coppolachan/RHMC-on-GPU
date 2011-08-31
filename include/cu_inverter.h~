@@ -1,0 +1,6 @@
+#ifndef CU_INVERTER_H
+#define CU_INVERTER_H
+
+void cu_multips_shifted_invert (REAL res, RationalApprox approx);
+
+#endif
