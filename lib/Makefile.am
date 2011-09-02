@@ -65,9 +65,11 @@ rhmc_SOURCES = 	./Main/rhmc.cc		\
 	./Tools/Rand/random.cc				\
 	./Tools/Rand/RANDOM/dSFMT.c			\
 	./Tools/vec3.cc					\
-	./Tools/InputParser/InputParser.cc		\
-	./Tools/InputParser/InputTextParser.cc		\
 	$(CUDA_SRCS)
+
+#	./Tools/InputParser/InputParser.cc		
+#	./Tools/InputParser/InputTextParser.cc		
+
 
 if ENABLE_CUDA
 dist_PROGRAMS = $(TMP_DIST) 
@@ -104,9 +106,6 @@ include_HEADERS = 	$(top_srcdir)/include/configuration.h	\
 	./Tools/Rand/RANDOM/dSFMT-params11213.h		\
 	./Tools/Packer/packer.h				\
 	./Tools/vec3.h					\
-	./Tools/InputParser/InputParser.h		\
-	./Tools/InputParser/InputTextParser.h		\
-	./Tools/InputParser/StringTools.h		\
 	./Cuda/cuda_find_min_max.h			\
 	./Cuda/cuda_deriv.h				\
 	./Cuda/cuda_exponentiate.h			\
@@ -124,6 +123,10 @@ include_HEADERS = 	$(top_srcdir)/include/configuration.h	\
 	./Cuda/cuda_inversion_kernels.h			\
 	./Cuda/cuda_tool_kernels.h			\
 	./Cuda/cuda_update_kernels.h
+
+#	./Tools/InputParser/InputParser.h		
+#	./Tools/InputParser/InputTextParser.h		
+#	./Tools/InputParser/StringTools.h		
 
 EXTRA_DIST = ./Cuda/cuda_deo.cu				\
 	./Cuda/cuda_deriv.cu				\
