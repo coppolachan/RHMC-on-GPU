@@ -3,8 +3,8 @@ Rational Hybrid Montecarlo with non improved staggered fermions
 
 ---
 **Developers and mantainers**  
-*Claudio Bonati* (C++ framework, CUDA kernels) (mail)  
-*Guido Cossu* (CUDA kernels) (cossu@post.kek.jp)  
+*Claudio Bonati* (C++ framework, CUDA kernels) (<bonati@df.unipi.it>)  
+*Guido Cossu* (CUDA kernels) (<cossu@post.kek.jp>)  
 
 *History*:  
 **Version 0.1**  9/2011     CUDA kernels
@@ -37,7 +37,7 @@ this will compile a code to run in a single core CPU.
 ### 3. Enabling CUDA routines
 
 In order to enable CUDA routines type the following command (also look at the 
-variour options in `configure --help`)
+various options in `configure --help`)
 
 `./configure --enable-cuda=ARCH`
 
@@ -50,8 +50,8 @@ in order to choose the target NVIDIA architecture
 *  *sm_13* double precision floating point support (Tesla Cards)    
 *  *sm_20*  Fermi architecture support  
 
-please refer to the original [NVIDIA documentation](http://developer.nvidia.com/cuda-toolkit-40) for more details on which
-cards support the several architectures.
+please refer to the original [NVIDIA documentation](http://developer.nvidia.com/cuda-toolkit-40) for more details 
+on which cards support the several architectures.
 
 ## 4. Issues
 
@@ -64,11 +64,13 @@ configure with the following command
 `./configure --enable-cuda=ARCH --with-cuda_comp=PATH_TO_COMPILER 
 CXX=PATH_TO_COMPILER/g++ CC=PATH_TO_COMPILER/gcc`
 
-Also, if the mandatory library [MPFR](http://www.mpfr.org/) (Multiple Precision) is installed in a 
-non standard location (not `/usr/lib`) use the flag `--with-mpfr=PATH` where `PATH` is the location
+Also, if the mandatory library [MPFR](http://www.mpfr.org/) (for Multiple Precision in rational approximations) is 
+installed in a non standard location (not `/usr/lib`) use the flag `--with-mpfr=PATH` where `PATH` is the location
 of the library in your system
 
 ## 5. Known bugs
 
-Please report any to the developers.
+If you find any bug please report any to the developers on GitHub issues:
+
+[RHMC on GPU issues](https://github.com/coppolachan/RHMC-on-GPU/issues)
 
