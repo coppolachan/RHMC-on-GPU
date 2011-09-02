@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.59])
-AC_INIT(rhmc_staggered_cuda, 0.1.2, cossu@post.kek.jp)
+AC_INIT(rhmc_staggered_cuda, 0.1.3, cossu@post.kek.jp)
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE([1.9 silent-rules -Wall -Werror foreign])
 AC_CONFIG_HEADERS([config.h])

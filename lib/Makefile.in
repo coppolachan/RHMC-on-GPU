@@ -195,7 +195,7 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-LDFLAGS = @LDFLAGS@ $(CUDA_LIBS) $(MPFR_INCFLAGS)
+LDFLAGS = @LDFLAGS@ $(CUDA_LIBS) $(MPFR_LIB)
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LTLIBOBJS = @LTLIBOBJS@
@@ -370,6 +370,10 @@ include_HEADERS = $(top_srcdir)/include/configuration.h	\
 	./Cuda/cuda_tool_kernels.h			\
 	./Cuda/cuda_update_kernels.h
 
+
+#	./Tools/InputParser/InputParser.h		
+#	./Tools/InputParser/InputTextParser.h		
+#	./Tools/InputParser/StringTools.h		
 EXTRA_DIST = ./Cuda/cuda_deo.cu				\
 	./Cuda/cuda_deriv.cu				\
 	./Cuda/cuda_dslash_dd_eo.cu			\
