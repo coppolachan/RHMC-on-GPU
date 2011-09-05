@@ -35,12 +35,13 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 subdir = .
-DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
+DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/configure config.guess config.sub depcomp \
 	install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/mpfr.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -146,8 +147,6 @@ LIBS = @LIBS@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
-MPFR_INCFLAGS = @MPFR_INCFLAGS@
-MPFR_LIB = @MPFR_LIB@
 NVCC = @NVCC@
 NVCCFLAGS = @NVCCFLAGS@
 OBJEXT = @OBJEXT@
@@ -220,7 +219,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = lib
-EXTRA_DIST = README
+EXTRA_DIST = README.md \
+	m4/mpfr.m4
+
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

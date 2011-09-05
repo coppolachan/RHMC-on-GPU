@@ -8,6 +8,8 @@ AM_INIT_AUTOMAKE([1.9 silent-rules -Wall -Werror foreign])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile lib/Makefile])
 
+m4_include([m4/mpfr.m4])
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
@@ -122,27 +124,10 @@ AC_SUBST(NVCCFLAGS)
 
 
 
-# Checks for libraries.
-AC_CHECK_LIB([mpfr],[mpfr_init], ,
-	     [echo "Error: multiple-precision floating-point MPFR library not found";
-	      echo "Check path if already installed";
-	      echo "Download at: http://www.mpfr.org/";
-	      exit])
+#####################################
+MPFR_DEVEL()
 
-AC_ARG_WITH([mpfr],
-AC_HELP_STRING([--with-mpfr=PATH],
-   		[Path where MPFR Multiple Precision library is installed [default=/usr/lib]])
-   		)
-		
 
-		if test -n "$with_mpfr"
-		      then
-   		      MPFR_INCFLAGS="-I$with_mpfr/include"
-   		      MPFR_LIB="-L$with_mpfr/lib"
-		fi
-
-AC_SUBST(MPFR_INCFLAGS)
-AC_SUBST(MPFR_LIB)
 
 # Checks for header files.
 AC_CHECK_HEADERS([inttypes.h stdlib.h string.h])
