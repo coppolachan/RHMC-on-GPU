@@ -12,8 +12,12 @@
 #include "include/parameters.h"
 #include "include/tools.h"
 #include "include/update.h"
+#include "include/measurement.h"
+
 
 #include "include/gpu.h"
+
+
 
 using namespace std;
 

@@ -7,7 +7,7 @@
 // number of threads if GPU is used
 #define NUM_THREADS 128
 
-#define REVERSIBILITY_TEST
+//#define REVERSIBILITY_TEST
 //#define PARAMETER_TEST
 
 //#define IM_CHEM_POT
