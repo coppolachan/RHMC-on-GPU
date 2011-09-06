@@ -9,11 +9,15 @@ void Deo(Fermion *out, const Fermion *in)
  {
  long int even;
  Vec3 aux;
- #ifdef IM_CHEM_POT
-  Vec3 aux1;
-  const complex<REAL> eim=complex<REAL>(eim_cos, eim_sin);
-  const complex<REAL> emim=complex<REAL>(eim_cos, -eim_sin);
- #endif
+ Vec3 aux1;
+ complex<REAL> eim, emim;
+
+  if (GlobalChemPotPar::Instance().UseChem()) {
+    eim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(), 
+		      GlobalChemPotPar::Instance().getEim_sin());
+    emim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(),
+		       -GlobalChemPotPar::Instance().getEim_sin());
+  }
 
  for(even=0; even<sizeh; even++)
     {
@@ -24,24 +28,24 @@ void Deo(Fermion *out, const Fermion *in)
     aux+=(gauge_conf->u_work[even+size ])*(in->fermion[nnp[even][1]-sizeh]);
     aux+=(gauge_conf->u_work[even+size2])*(in->fermion[nnp[even][2]-sizeh]);
     
-    #ifndef IM_CHEM_POT
+    if (!GlobalChemPotPar::Instance().UseChem()) {
       aux+=(gauge_conf->u_work[even+size3])*(in->fermion[nnp[even][3]-sizeh]);
-    #else
+    } else {
       aux1=(gauge_conf->u_work[even+size3])*(in->fermion[nnp[even][3]-sizeh]);
       aux1*=eim;
       aux+=aux1;
-    #endif
+    }
 
     aux-=(~(gauge_conf->u_work[nnm[even][0]      ]))*(in->fermion[nnm[even][0]-sizeh]);
     aux-=(~(gauge_conf->u_work[nnm[even][1]+size ]))*(in->fermion[nnm[even][1]-sizeh]);
     aux-=(~(gauge_conf->u_work[nnm[even][2]+size2]))*(in->fermion[nnm[even][2]-sizeh]);
-    #ifndef IM_CHEM_POT
+    if (!GlobalChemPotPar::Instance().UseChem()) {
       aux-=(~(gauge_conf->u_work[nnm[even][3]+size3]))*(in->fermion[nnm[even][3]-sizeh]);
-    #else
+    } else {
       aux1=(~(gauge_conf->u_work[nnm[even][3]+size3]))*(in->fermion[nnm[even][3]-sizeh]);
       aux1*=emim;
       aux-=aux1;
-    #endif
+    }
 
     aux*=0.5;
 
@@ -59,36 +63,40 @@ void Doe(Fermion *out, const Fermion *in)
  {
  long int odd;
  Vec3 aux;
- #ifdef IM_CHEM_POT
-  Vec3 aux1;
-  const complex<REAL> eim=complex<REAL>(eim_cos, eim_sin);
-  const complex<REAL> emim=complex<REAL>(eim_cos, -eim_sin);
- #endif
+ Vec3 aux1;
+ complex<REAL> eim, emim;
 
+  if (GlobalChemPotPar::Instance().UseChem()) {
+    eim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(), 
+		      GlobalChemPotPar::Instance().getEim_sin());
+    emim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(),
+		       -GlobalChemPotPar::Instance().getEim_sin());
+  }
+ 
  for(odd=sizeh; odd<size; odd++)
     {
     // nnp[odd,i]=even  ---> 0<=nnp[odd,i]<sizeh 
     aux =(gauge_conf->u_work[odd]      )*(in->fermion[nnp[odd][0]]);
     aux+=(gauge_conf->u_work[odd+size] )*(in->fermion[nnp[odd][1]]);
     aux+=(gauge_conf->u_work[odd+size2])*(in->fermion[nnp[odd][2]]);
-    #ifndef IM_CHEM_POT
+    if (!GlobalChemPotPar::Instance().UseChem()) {
       aux+=(gauge_conf->u_work[odd+size3])*(in->fermion[nnp[odd][3]]);
-    #else
+    } else {
       aux1=(gauge_conf->u_work[odd+size3])*(in->fermion[nnp[odd][3]]);
       aux1*=eim;
       aux+=aux1;
-    #endif
+    }
 
     aux-=(~(gauge_conf->u_work[nnm[odd][0]      ]))*(in->fermion[nnm[odd][0]]);
     aux-=(~(gauge_conf->u_work[nnm[odd][1]+size ]))*(in->fermion[nnm[odd][1]]);
     aux-=(~(gauge_conf->u_work[nnm[odd][2]+size2]))*(in->fermion[nnm[odd][2]]);
-    #ifndef IM_CHEM_POT
+    if (!GlobalChemPotPar::Instance().UseChem()) {
       aux-=(~(gauge_conf->u_work[nnm[odd][3]+size3]))*(in->fermion[nnm[odd][3]]);
-    #else
+    } else {
       aux1=(~(gauge_conf->u_work[nnm[odd][3]+size3]))*(in->fermion[nnm[odd][3]]);
       aux1*=emim;
       aux-=aux1;
-    #endif
+    }
      
     aux*=0.5;
 

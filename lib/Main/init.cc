@@ -27,7 +27,8 @@ int initialize(void)
     InputParser *Input = new InputTextParser("input_parameters");
     GlobalParams::Instance().setParams(*Input);
     GlobalParams::Instance().listParams();
-
+    GlobalChemPotPar::Instance().setParams(*Input);
+    GlobalChemPotPar::Instance().listParams();
 
      // initialize random number generator
     initrand(GlobalParams::Instance().getRandSeed());

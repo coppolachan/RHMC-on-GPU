@@ -31,17 +31,6 @@ const REAL inv_size=1.0/(REAL) size;
 const REAL inv_size_by_three=inv_size/3.;
 const REAL inv_vol3=1.0/(REAL) vol3;
 
-#ifdef IM_CHEM_POT
-const REAL eim_cos=cos(immu);
-const REAL eim_sin=sin(immu);
-//  #ifndef __CUDACC__  // if we are not inside nvcc
-//  const complex<REAL> eim=complex<REAL>(eim_cos, eim_sin);
-//  const complex<REAL> emim=complex<REAL>(eim_cos, -eim_sin);
-//  #endif
-#endif
-
-
-
 // mathematical constants
 const REAL one_by_three=0.3333333333333333333333333333333333333333333333333333333333333333333;
 const REAL one_by_sqrt_two=0.7071067811865475244008443621048490392848359376884740365883398689953;

@@ -24,7 +24,8 @@ Rand_Seed   0
 
 # Imaginary chemical potential (if used)
 # --------------------------------------
-ImmMu       0.248
+ChemPotential   NO_CHEMPOT
+ImMu           0.248
 
 # Fermionic temporal boundary condition 
 # (0 antiperiodic, else periodic)
@@ -71,7 +72,6 @@ ResidueMetro    1.0e-9
 ApproxMD        8
 LambdaMinMD     1.0e-5
 ResidueMD       1.0e-3
-
 
 # GPU devices
 # -----------

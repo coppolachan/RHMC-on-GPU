@@ -44,14 +44,16 @@ extern "C" void cuda_init0(void)
   size_l=(int) sizeh;
   cudaSafe(AT,cudaMemcpyToSymbol(size_dev_h, &size_l, sizeof(int), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
 
-  #ifdef IM_CHEM_POT
-  mass_l=(float)eim_cos;
-  cudaSafe(AT,cudaMemcpyToSymbol(dev_eim_cos_f, &mass_l, sizeof(float), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
-  mass_l=(float)eim_sin;
-  cudaSafe(AT,cudaMemcpyToSymbol(dev_eim_sin_f, &mass_l, sizeof(float), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
-  cudaSafe(AT,cudaMemcpyToSymbol(dev_eim_cos_d, &eim_cos, sizeof(double), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
-  cudaSafe(AT,cudaMemcpyToSymbol(dev_eim_sin_d, &eim_sin, sizeof(double), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
-  #endif
+  if (GlobalChemPotPar::Instance().UseChem()) {
+    double eim_cos = GlobalChemPotPar::Instance().getEim_cos();
+    double eim_sin = GlobalChemPotPar::Instance().getEim_sin();
+    mass_l=(float)eim_cos;
+    cudaSafe(AT,cudaMemcpyToSymbol(dev_eim_cos_f, &mass_l, sizeof(float), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
+    mass_l=(float)eim_sin;
+    cudaSafe(AT,cudaMemcpyToSymbol(dev_eim_sin_f, &mass_l, sizeof(float), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
+    cudaSafe(AT,cudaMemcpyToSymbol(dev_eim_cos_d, &eim_cos, sizeof(double), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
+    cudaSafe(AT,cudaMemcpyToSymbol(dev_eim_sin_d, &eim_sin, sizeof(double), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
+  }
 
   #ifdef DEBUG_MODE
   printf("\tterminated cuda_init0\n");

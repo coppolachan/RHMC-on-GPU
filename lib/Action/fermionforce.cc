@@ -12,12 +12,15 @@ void fermionforce(void)
   #ifdef DEBUG_MODE
   cout << "DEBUG: inside fermionforce ..."<<endl;
   #endif
+  complex<REAL> eim, emim;
 
- #ifdef IM_CHEM_POT
-  const complex<REAL> eim=complex<REAL>(eim_cos, eim_sin);
-  const complex<REAL> emim=complex<REAL>(eim_cos, -eim_sin);
- #endif
-
+  if (GlobalChemPotPar::Instance().UseChem()) {
+    eim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(), 
+		      GlobalChemPotPar::Instance().getEim_sin());
+    emim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(),
+		       -GlobalChemPotPar::Instance().getEim_sin());
+  }
+  
   int pseudofermion, iter, mu;
   long int even, odd, x, y;
   RationalApprox approx;

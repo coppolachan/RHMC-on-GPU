@@ -19,11 +19,14 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
   #ifdef DEBUG
   cout << "DEBUG: inside chiral_meas ..."<<endl;
   #endif
+  complex<REAL> eim, emim;
 
-  #ifdef IM_CHEM_POT
-  const complex<REAL> eim=complex<REAL>(eim_cos, eim_sin);
-  const complex<REAL> emim=complex<REAL>(eim_cos, -eim_sin);
-  #endif
+  if (GlobalChemPotPar::Instance().UseChem()) {
+    eim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(), 
+		      GlobalChemPotPar::Instance().getEim_sin());
+    emim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(),
+		       -GlobalChemPotPar::Instance().getEim_sin());
+  }
 
   complex<double> *c_vector1, *c_vector2;
   c_vector1=new complex<double>[size];  // complex auxiliary vectors to be used in energy and baryon 

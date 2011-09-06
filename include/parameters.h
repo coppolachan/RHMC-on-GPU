@@ -16,9 +16,7 @@ class Params{
   REAL one_by_mass;
   REAL mass2;
   int rand_seed;  // random seed (if 0 time machine is used)
-#ifdef IM_CHEM_POT
-  REAL immu; // immaginary chemical potential (REAL PART)
-#endif
+
   // fermion temporal bounday condition   =0 --> antiperiodic, else periodic
   int ferm_temp_bc;
 
@@ -79,9 +77,6 @@ public:
 
   int getRandSeed(){return rand_seed;}
 
-#ifdef IM_CHEM_POT
-  REAL getImMu(){return immu;}
-#endif
   int getFermTempBC(){return ferm_temp_bc;}
   int getStartState(){return starting_state;}
 
@@ -120,7 +115,29 @@ public:
   void listParams();
 };
 
+
+class ChemPotParams {
+private:
+  std::string use_chem_potential;
+  REAL immu; // immaginary chemical potential (REAL PART)
+  bool UseState; 
+  REAL eim_cos;
+  REAL eim_sin;
+public:
+  void setParams(InputParser &);
+  void listParams();
+
+  std::string getUseChemPotential(){return use_chem_potential;}
+  REAL getImMu(){return immu;}
+  REAL getEim_cos(){return eim_cos;}
+  REAL getEim_sin(){return eim_sin;}
+
+  bool UseChem(){return UseState;}
+
+};
+
 typedef Singleton<Params> GlobalParams;
+typedef Singleton<ChemPotParams> GlobalChemPotPar;
 
 // lattice dimensions
 const int nx=8;

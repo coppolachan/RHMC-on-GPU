@@ -60,12 +60,12 @@ __device__ __constant__ double shift_coeff_d[max_approx_order];
 __device__ __constant__ float residuals[max_approx_order];
 __device__ __constant__ double residuals_d[max_approx_order];
 
-#ifdef IM_CHEM_POT
+
 __device__ __constant__ float dev_eim_cos_f;
 __device__ __constant__ float dev_eim_sin_f;
 __device__ __constant__ double dev_eim_cos_d;
 __device__ __constant__ double dev_eim_sin_d;
-#endif
+
 
 texture<float4, 1, cudaReadModeElementType> gauge_texRef;
 texture<float2, 1, cudaReadModeElementType> fermion_texRef;

@@ -274,9 +274,9 @@ void simulation_details(void)
   
   cout <<"beta = "<<GlobalParams::Instance().getBeta()<<"\n";
   
-#ifdef IM_CHEM_POT
-  cout <<"immaginary chemical potential = "<<immu<<"\n";
-#endif
+  if (GlobalChemPotPar::Instance().UseChem())
+    cout <<"immaginary chemical potential = "<<GlobalChemPotPar::Instance().getImMu()<<"\n";
+  
   
   if(GlobalParams::Instance().getStartState()==0) cout << "Cold start\n";
   if(GlobalParams::Instance().getStartState()==1) cout << "Hot start\n";

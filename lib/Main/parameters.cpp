@@ -104,3 +104,34 @@ void Params::listParams() {
 
   std::cout << ":::::: GPU Device       : "<< gpu_device_to_use << std::endl;
 }
+
+
+void ChemPotParams::setParams(InputParser &Input){
+  UseState = false; //default do not use chemical potential
+  Input.get("ChemPotential",use_chem_potential);
+  if (use_chem_potential.compare("NO_CHEMPOT") &&
+      use_chem_potential.compare("USE_CHEMPOT")) {
+    std::cerr<< "Undefined chemical potential choice : " << use_chem_potential 
+	     << std::endl;
+    std::cerr<< "Check input file "<< std::endl;
+    exit(1);
+  }
+
+  //if (use_chem_potential.compare("USE_CHEMPOT"))
+  //temporary workaround to use just the global define in global_macro.h
+#ifdef IM_CHEM_POT
+  UseState = true;
+#endif
+  //end of workaround.
+
+  Input.get("ImMu",immu);
+
+  eim_cos=cos(immu);
+  eim_sin=sin(immu);
+
+}
+void ChemPotParams::listParams() {
+  //Commented because it is now yet available to use
+  //  std::cout << "Use chemical potential       : "<< use_chem_potential << std::endl;  
+  std::cout << "Imaginary chemical potential : "<< immu << std::endl;
+}
