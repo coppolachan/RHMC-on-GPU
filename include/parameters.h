@@ -33,7 +33,6 @@ class Params{
 
   // MD parameters
   int no_md; // number of MD steps
-  // =0 does not use multistep,   =1 2MN_multistep,   =2 4MN_multistep
   std::string use_multistep;  
   int gauge_scale;   // Update fermions every gauge_scale gauge updates
 #ifndef __CUDACC__  // if we are not inside nvcc
