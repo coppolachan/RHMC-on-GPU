@@ -32,9 +32,9 @@ void fermionforce(void)
     int order;
     get_order(order, approx);
 
-    cu_multips_shifted_invert(residue_md, approx);
+    cu_multips_shifted_invert(GlobalParams::Instance().getResidueMD(), approx);
   #else
-    multips_shifted_invert(fermion_shiftmulti, fermion_chi, residue_md, approx);
+    multips_shifted_invert(fermion_shiftmulti, fermion_chi, GlobalParams::Instance().getResidueMD(), approx);
   #endif
 
   // force reconstruction

@@ -37,10 +37,10 @@ void minimum_norm2_A(void)
 
  // First step for the Q 
  // Q -> exp(i dt lambda P) Q
- temp=ieps*complex<REAL>(lambda,0.0);
+ temp=GlobalParams::Instance().getIeps()*complex<REAL>(lambda,0.0);
  conf_left_exp_multiply(temp);
 
- for(md=1; md<no_md; md++)
+ for(md=1; md<GlobalParams::Instance().getNumMD(); md++)
     {
     // Step for the P
     // P' = P - dt/2 dS/dq
@@ -49,11 +49,11 @@ void minimum_norm2_A(void)
     #else
       calc_ipdot_gauge();
     #endif
-    momenta_sum_multiply(-iepsh);
+    momenta_sum_multiply(-GlobalParams::Instance().getIepsh());
 
     // Step for the Q
     // Q' = exp[(1-2l) * dt *i P] Q
-    temp=ieps*complex<REAL>((1.0-2.0*lambda),0.0);
+    temp=GlobalParams::Instance().getIeps()*complex<REAL>((1.0-2.0*lambda),0.0);
     conf_left_exp_multiply(temp);
 
     // Step for the P
@@ -63,11 +63,11 @@ void minimum_norm2_A(void)
     #else
       calc_ipdot_gauge();
     #endif
-    momenta_sum_multiply(-iepsh);
+    momenta_sum_multiply(-GlobalParams::Instance().getIepsh());
 
     // Step for the Q
     // Q' = exp[2l * dt *i P] Q
-    temp=ieps*complex<REAL>(2.0*lambda,0.0);
+    temp=GlobalParams::Instance().getIeps()*complex<REAL>(2.0*lambda,0.0);
     conf_left_exp_multiply(temp);
     }
 
@@ -78,11 +78,11 @@ void minimum_norm2_A(void)
  #else
    calc_ipdot_gauge();
  #endif
- momenta_sum_multiply(-iepsh);
+ momenta_sum_multiply(-GlobalParams::Instance().getIepsh());
 
  // Step for the Q
  // Q' = exp[(1-2l) * dt *i P] Q
- temp=ieps*complex<REAL>((1.0-2.0*lambda),0.0);
+ temp=GlobalParams::Instance().getIeps()*complex<REAL>((1.0-2.0*lambda),0.0);
  conf_left_exp_multiply(temp);
 
  // Step for the P
@@ -92,11 +92,11 @@ void minimum_norm2_A(void)
  #else
    calc_ipdot_gauge();
  #endif
- momenta_sum_multiply(-iepsh);
+ momenta_sum_multiply(-GlobalParams::Instance().getIepsh());
 
  // Step for the Q
  // Q' = exp[l * dt *i P] Q
- temp=ieps*complex<REAL>(lambda,0.0);
+ temp=GlobalParams::Instance().getIeps()*complex<REAL>(lambda,0.0);
  conf_left_exp_multiply(temp);
 
  #ifdef DEBUG_MODE
@@ -140,14 +140,14 @@ void minimum_norm2_B(void)
  #else
    calc_ipdot_gauge();
  #endif
- temp=-ieps*complex<REAL>(lambda,0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>(lambda,0.0);
  momenta_sum_multiply(temp);
 
- for(md=1; md<no_md; md++)
+ for(md=1; md<GlobalParams::Instance().getNumMD(); md++)
     {
     // Step for the Q
     // Q' = exp[dt/2 *i P] Q
-    conf_left_exp_multiply(iepsh);
+    conf_left_exp_multiply(GlobalParams::Instance().getIepsh());
     gauge_conf->unitarize_with_eta(); 
 
     // Step for the P
@@ -157,12 +157,12 @@ void minimum_norm2_B(void)
     #else
       calc_ipdot_gauge();
     #endif
-    temp=-ieps*complex<REAL>((1.0-2.0*lambda),0.0);
+    temp=-GlobalParams::Instance().getIeps()*complex<REAL>((1.0-2.0*lambda),0.0);
     momenta_sum_multiply(temp);
 
     // Step for the Q
     // Q' = exp[dt/2 *i P] Q
-    conf_left_exp_multiply(iepsh);
+    conf_left_exp_multiply(GlobalParams::Instance().getIepsh());
 
     // Step for the P
     // P' = P - 2l*dt*dS/dq
@@ -171,13 +171,13 @@ void minimum_norm2_B(void)
     #else
       calc_ipdot_gauge();
     #endif
-    temp=-ieps*complex<REAL>(2.0*lambda,0.0);
+    temp=-GlobalParams::Instance().getIeps()*complex<REAL>(2.0*lambda,0.0);
     momenta_sum_multiply(temp);
     }
 
  // Step for the Q
  // Q' = exp[dt/2 *i P] Q
- conf_left_exp_multiply(iepsh);
+ conf_left_exp_multiply(GlobalParams::Instance().getIepsh());
 
  // Step for the P
  // P' = P - (1-2l)*dt*dS/dq
@@ -186,12 +186,12 @@ void minimum_norm2_B(void)
  #else
    calc_ipdot_gauge();
  #endif
- temp=-ieps*complex<REAL>((1.0-2.0*lambda),0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>((1.0-2.0*lambda),0.0);
  momenta_sum_multiply(temp);
 
  // Step for the Q
  // Q' = exp[dt/2 *i P] Q
- conf_left_exp_multiply(iepsh);
+ conf_left_exp_multiply(GlobalParams::Instance().getIepsh());
 
  // Step for the P
  // P' = P - l*dt*dS/dq
@@ -200,7 +200,7 @@ void minimum_norm2_B(void)
  #else
    calc_ipdot_gauge();
  #endif
- temp=-ieps*complex<REAL>(lambda,0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>(lambda,0.0);
  momenta_sum_multiply(temp);
 
  #ifdef DEBUG_MODE

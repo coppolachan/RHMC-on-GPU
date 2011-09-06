@@ -144,7 +144,7 @@ void init_geo(void)
                 {
                 eta[num+size3]=-1;
                 }
-              if(ferm_temp_bc==0)
+              if(GlobalParams::Instance().getFermTempBC() == 0)
                 {
                 if(t==nt-1)        // antiperiodic temporal b.c. for fermions
                   {

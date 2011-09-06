@@ -30,7 +30,7 @@ int initialize(void)
 
 
      // initialize random number generator
-     initrand(rand_seed);
+    initrand(GlobalParams::Instance().getRandSeed());
 
      // allocate and initialize rational approximations
      rationalapprox_calc();
@@ -43,7 +43,7 @@ int initialize(void)
      init_geo();
 
      // allocate gauge configuration
-     gauge_conf=new Conf(start);
+     gauge_conf=new Conf(GlobalParams::Instance().getStartState());
 
      // allocate staples 
      gauge_staples=new Staples();

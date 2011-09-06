@@ -42,7 +42,7 @@ void cu_multips_shifted_invert (REAL res, RationalApprox approx)
   for(pseudofermion=0; pseudofermion<no_ps; pseudofermion++)
      {
 
-     if(res<inv_single_double_prec)
+       if(res<GlobalParams::Instance().getInvSingleDoublePrec())
        {
        cuda_shifted_inverter_d(res,
                       shifts,
@@ -59,7 +59,7 @@ void cu_multips_shifted_invert (REAL res, RationalApprox approx)
                              &cg);
        }
 
-     if(cg==max_cg)
+     if(cg==GlobalParams::Instance().getMaxCG())
        {
        ofstream err_file;
        err_file.open(QUOTEME(ERROR_FILE), ios::app);   

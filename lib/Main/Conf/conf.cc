@@ -159,7 +159,11 @@ void Conf::write(void)
  file.open(conf_name, ios::out);
  file.precision(16);
 
- file << nx << " " << ny << " " << nz << " " << nt << " " << beta << " " << mass << " " <<no_flavours << " " <<  update_iteration <<"\n";
+ file << nx << " " << ny << " " << nz << " " << nt << " " << 
+   GlobalParams::Instance().getBeta() << " " << 
+   GlobalParams::Instance().getMass() << " " <<
+   GlobalParams::Instance().getNf()   << " " <<  
+   update_iteration <<"\n";
 
  for(r=0; r<no_links; r++)
     {
@@ -189,7 +193,10 @@ void Conf::write_last(void)
  file.open(QUOTEME(CONF_FILE), ios::out);
  file.precision(16);
 
- file << nx << " " << ny << " " << nz << " " << nt << " " << beta << " " << mass << " " <<no_flavours << " " <<  update_iteration <<"\n";
+ file << nx << " " << ny << " " << nz << " " << nt << " " << 
+   GlobalParams::Instance().getBeta() << " " << 
+   GlobalParams::Instance().getMass() << " " << 
+   GlobalParams::Instance().getNf()   << " " <<  update_iteration <<"\n";
 
  for(r=0; r<no_links; r++)
     {

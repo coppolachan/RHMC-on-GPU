@@ -1,5 +1,4 @@
 #include <iostream>
-#include "include/global_var.h"
 #include "include/tools.h"
 
 #ifdef USE_GPU
@@ -50,7 +49,7 @@ void findmaxeig(REAL &max)
        {
        vr_1=(loc_r->fermion[i]);
        vr_2=(loc_p->fermion[i]);
-       vr_3=mass2*vr_1-vr_2;
+       vr_3=GlobalParams::Instance().getMass2()*vr_1-vr_2;
        (loc_p->fermion[i])=vr_3;   // p=(M^dag M)r
        d_vector1[i]=vr_3.l2norm2();
        }
@@ -84,7 +83,7 @@ void findmineig(REAL &min, const REAL &max)
   REAL norm, inorm, old_norm, delta;
   Vec3 vr_1, vr_2, vr_3;
 
-  delta=max-mass2;
+  delta=max-GlobalParams::Instance().getMass2();
 
   // starting gauss vector p
   loc_p->gauss(); 
@@ -143,12 +142,12 @@ void findminmax(REAL &min, REAL &max)
   cout << "DEBUG: inside findminmax ..."<< endl;
   #endif
 
-  if(use_stored==0 && update_iteration>=therm_updates)
+  if(use_stored==0 && update_iteration>=GlobalParams::Instance().getThermUpdates())
     {
     min=min_stored;
     max=max_stored;
     }
-  if((use_stored==0 && update_iteration<therm_updates) || use_stored==1)  // eigenvalues calculation in thermalization
+  if((use_stored==0 && update_iteration<GlobalParams::Instance().getThermUpdates()) || use_stored==1)  // eigenvalues calculation in thermalization
     {                                                                     // and metropolis test
     #ifndef USE_GPU
       findmaxeig(max);

@@ -25,9 +25,9 @@ void leapfrog()
 
    // Step for the Q
    // Q -> exp(i dt/2 P) Q
-   conf_left_exp_multiply(iepsh);
+  conf_left_exp_multiply(GlobalParams::Instance().getIepsh());
 
-   for(md=1; md<no_md; md++)
+  for(md=1; md<GlobalParams::Instance().getNumMD(); md++)
       {
       // Step for the P
       // P -> P - i dt dS/dq
@@ -36,11 +36,11 @@ void leapfrog()
       #else
         calc_ipdot_gauge();
       #endif
-      momenta_sum_multiply(ieps);
+      momenta_sum_multiply(GlobalParams::Instance().getIeps());
 
       // Step for the Q
       // Q -> exp(i dt P) Q
-      conf_left_exp_multiply(ieps);
+      conf_left_exp_multiply(GlobalParams::Instance().getIeps());
       }
 
   // Step for the P
@@ -50,11 +50,11 @@ void leapfrog()
   #else
     calc_ipdot_gauge();
   #endif
-  momenta_sum_multiply(ieps);
+  momenta_sum_multiply(GlobalParams::Instance().getIeps());
 
   // Step for the Q
   // Q -> exp(i dt/2 P) Q
-  conf_left_exp_multiply(iepsh);
+  conf_left_exp_multiply(GlobalParams::Instance().getIepsh());
 
   #ifdef DEBUG_MODE
   cout << "\tterminated leapfrog"<<endl;

@@ -22,7 +22,7 @@ class InputTextParser: public InputParser{
 
   std::map<std::string,std::string> ParameterMap;
 
-  int ParseFile();
+  void ParseFile();
   void ProcessParameter(std::string ParamLine);
   bool CheckKey(std::string Key);
 
@@ -30,6 +30,7 @@ public:
   InputTextParser(std::string TextInputFileName);
   void List();
   void get(const std::string ParameterName, double&val);
+  void get(const std::string ParameterName, float&val);
   void get(const std::string ParameterName, int &val);
   void get(const std::string ParameterName, bool &val);
   void get(const std::string ParameterName, std::string &val);

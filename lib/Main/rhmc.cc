@@ -4,6 +4,7 @@
   Source code of the main hmc program
 
  */
+#include <string>
 
 #define DEFINE_GLOBALS
 #include "include/rhmc_include.h"
@@ -49,7 +50,7 @@ int main(void)
 	 
 	 // STANDARD_UPDATE
 #ifdef STANDARD_UPDATE
-	 if(start==2) 
+	 if(GlobalParams::Instance().getStartState()==2) 
 	   {
 	     out_file.open(QUOTEME(DATA_FILE), ios::app); 
 	   }
@@ -57,15 +58,16 @@ int main(void)
 	   {
 	     out_file.open(QUOTEME(DATA_FILE), ios::out); 
 	     out_file << "## "<< nx << " " << ny << " " << nz << " "<< nt << " ";
-	     out_file << GlobalParams::Instance().getNf() << " " << mass << " " << beta << "\n";
+	     out_file << GlobalParams::Instance().getNf() << " " << 
+	       GlobalParams::Instance().getMass() << " " << GlobalParams::Instance().getBeta() << "\n";
 	   }
 	 out_file.precision(12);
 	 
 	 cout << "\n=== STANDARD UPDATE ===\n";
-	 while(update_iteration-update_iteration_old<run_update_iterations && stop_cond==1)
+	 while(update_iteration-update_iteration_old<GlobalParams::Instance().getRunUpdateIterations() && stop_cond==1)
 	   {
 	     cout << "\n--- Iteration number " << update_iteration << "  [ still ";
-	     cout << run_update_iterations - update_iteration + update_iteration_old << 
+	     cout << GlobalParams::Instance().getRunUpdateIterations() - update_iteration + update_iteration_old << 
 	       " iterations to end ]---"<<endl;
 	     
 #ifdef USE_GPU
@@ -73,7 +75,7 @@ int main(void)
 #endif
 	     
 #ifndef NO_MEASURE
-	     if(update_iteration % meas_every==0)
+	     if(update_iteration % GlobalParams::Instance().getMeasInterval()==0)
 	       {
 		 time_start=clock();
 		 meas(out_file); 
@@ -109,10 +111,10 @@ int main(void)
 	     update_iteration++;
 	     
 	     // write configuration to file
-	     if(update_iteration % save_conf_every ==0)  
+	     if(update_iteration % GlobalParams::Instance().getSaveInterval() ==0)  
 	       {
 		 time_start=clock();
-		 if(update_iteration-update_iteration_old!=run_update_iterations)
+		 if(update_iteration-update_iteration_old!=GlobalParams::Instance().getRunUpdateIterations())
 		   {
 		     gauge_conf->write();
 		   }
@@ -139,8 +141,8 @@ int main(void)
 	       }
 	     
 	     // write configuration to file
-	     if(update_iteration %save_conf_every != 0 && 
-		update_iteration-update_iteration_old==run_update_iterations)
+	     if(update_iteration %GlobalParams::Instance().getSaveInterval() != 0 && 
+		update_iteration-update_iteration_old==GlobalParams::Instance().getRunUpdateIterations())
 	       {
 		 time_start=clock();
 		 gauge_conf->write_last();
@@ -157,10 +159,10 @@ int main(void)
 	 // PARAMETER_TEST UPDATE
 #ifdef PARAMETER_TEST
 	 cout << "\n=== PARAMETER TEST UPDATE ===\n";
-	 while(update_iteration-update_iteration_old<run_update_iterations && stop_cond==1)
+	 while(update_iteration-update_iteration_old<GlobalParams::Instance().getRunUpdateIterations() && stop_cond==1)
 	   {
 	     cout << "\n--- Iteration number " << update_iteration << "  [ still ";
-	     cout << run_update_iterations - update_iteration + update_iteration_old << 
+	     cout << GlobalParams::Instance().getRunUpdateIterations() - update_iteration + update_iteration_old << 
 	       " iterations to end ]---"<< endl;
 	     
 #ifdef USE_GPU
@@ -197,10 +199,10 @@ int main(void)
 	 // REVERSIBILITY_TEST UPDATE
 #ifdef REVERSIBILITY_TEST
 	 cout << "\n=== REVERSIBILITY_TEST UPDATE ===\n";
-	 while(update_iteration-update_iteration_old<run_update_iterations && stop_cond==1)
+	 while(update_iteration-update_iteration_old<GlobalParams::Instance().getRunUpdateIterations() && stop_cond==1)
 	   {
 	     cout << "\n--- Iteration number " << update_iteration << "  [ still ";
-	     cout << run_update_iterations - update_iteration + update_iteration_old << 
+	     cout << GlobalParams::Instance().getRunUpdateIterations() - update_iteration + update_iteration_old << 
 	       " iterations to end ]---"<<endl;
 	     
 #ifdef USE_GPU
@@ -259,63 +261,69 @@ void simulation_details(void)
   
   cout <<"Number of threads for block "<< QUOTEME(NUM_THREADS) <<"\n\n";
   
-  cout <<"Number of thermalization updates "<< therm_updates <<"\n\n";
+  cout <<"Number of thermalization updates "<< GlobalParams::Instance().getThermUpdates() <<"\n\n";
   
   cout <<"Lattice dimensions: nx = "<<nx<<"  ny = "<<ny<<"  nz = "<<nz<<"  nt = "<<nt<<"\n";
   
 #ifndef PURE_GAUGE
   cout <<"Number of flavours = "<< GlobalParams::Instance().getNf()<<"\n";
-  cout <<"Quark mass =  "<< mass<<"\n";
+  cout <<"Quark mass =  "<< GlobalParams::Instance().getMass()<<"\n";
 #else
   cout <<"Pure gauge simulation\n";
 #endif
   
-  cout <<"beta = "<<beta<<"\n";
+  cout <<"beta = "<<GlobalParams::Instance().getBeta()<<"\n";
   
 #ifdef IM_CHEM_POT
   cout <<"immaginary chemical potential = "<<immu<<"\n";
 #endif
   
-  if(start==0) cout << "Cold start\n";
-  if(start==1) cout << "Hot start\n";
-  if(start==2) cout << "Previous simulation continuation\n";
+  if(GlobalParams::Instance().getStartState()==0) cout << "Cold start\n";
+  if(GlobalParams::Instance().getStartState()==1) cout << "Hot start\n";
+  if(GlobalParams::Instance().getStartState()==2) cout << "Previous simulation continuation\n";
   cout <<"\n";
   
-  if(use_multistep==0)
+  if( GlobalParams::Instance().getMultistep().compare("NO_MULTISTEP")==0)
     {
       cout <<"Multistep integrator NOT used\n";
     }
   else
     {
-      if(use_multistep==1)
+      if(GlobalParams::Instance().getMultistep().compare("2MN_MULTISTEP")==0)
 	{
-	  cout <<"Used 2MN multistep integrator\n";
+	  cout <<"Using 2MN multistep integrator\n";
 	}
-      if(use_multistep==2)
+      if(GlobalParams::Instance().getMultistep().compare("4MN_MULTISTEP")==0)
 	{
-	  cout <<"Used 4MN multistep integrator\n";
+	  cout <<"Using 4MN multistep integrator\n";
 	}
-      cout <<"Gauge scale for multistep integrator = "<<gauge_scale<<"\n";
+      cout <<"Gauge scale for multistep integrator = "<<
+	GlobalParams::Instance().getGaugeTimeScale()<<"\n";
     }
   
-  cout <<"Number of MD steps for trajectory (time length = 1.0) = "<< no_md<<"\n\n";
+  cout <<"Number of MD steps for trajectory (time length = 1.0) = "<<
+    GlobalParams::Instance().getNumMD()<<"\n\n";
   
 #ifndef PURE_GAUGE
   cout <<"Number of pseudofermions = "<< no_ps<<"\n\n";
 #endif
   
-  cout <<"Residue for CG inverter in metropolis test = "<< residue_metro <<"\n";
-  cout <<"Residue for CG inverter in molecular dynamics = "<< residue_md <<"\n";
+  cout <<"Residue for CG inverter in metropolis test = "<< 
+    GlobalParams::Instance().getResidueMetro() <<"\n";
+  cout <<"Residue for CG inverter in molecular dynamics = "<< 
+    GlobalParams::Instance().getResidueMD() <<"\n";
 #ifdef USE_GPU
-  cout <<"Double precision inverter used if residue < " << inv_single_double_prec <<"\n";
+  cout <<"Double precision inverter used if residue < " << 
+    GlobalParams::Instance().getInvSingleDoublePrec() <<"\n";
 #endif
   cout <<"\n";
   
-  cout <<"Number of random vectors for chiral measurements = "<< rand_vect <<"\n";
+  cout <<"Number of random vectors for chiral measurements = "<<
+    GlobalParams::Instance().getRandVect() <<"\n";
   
 #ifdef USE_GPU
   cout <<"\n";
-  GPUDeviceInfo(gpu_device_to_use);
+  GPUDeviceInfo(GlobalParams::Instance().getGPUDevice());
 #endif
   
   cout <<endl;

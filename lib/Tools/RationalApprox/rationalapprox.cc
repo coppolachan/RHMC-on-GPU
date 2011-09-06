@@ -160,7 +160,7 @@ void RationalApprox::first_inv_approx_coeff(void)
 
   
  // rescale coeff.
- double exponent = ((double) no_flavours) /8./ ((double)no_ps);
+ double exponent = ((double) GlobalParams::Instance().getNf()) /8./ ((double)no_ps);
  epsilon=pow(max, exponent);
  RA_a0*=epsilon;
  for(i=0; i<approx_order; i++)
@@ -204,7 +204,7 @@ void RationalApprox::md_inv_approx_coeff(void)
 
   
  // rescale coeff.
- double exponent = -((double) no_flavours)/4./((double)no_ps);
+ double exponent = -((double) GlobalParams::Instance().getNf())/4./((double)no_ps);
  epsilon=pow(max, exponent);
  RA_a0*=epsilon;
  for(i=0; i<approx_order; i++)
@@ -248,7 +248,7 @@ void RationalApprox::last_inv_approx_coeff(void)
 
   
  // rescale coeff.
- double exponent = -((double) no_flavours)/4./((double)no_ps);
+ double exponent = -((double) GlobalParams::Instance().getNf())/4./((double)no_ps);
  epsilon=pow(max, exponent);
  RA_a0*=epsilon;
  for(i=0; i<approx_order; i++)

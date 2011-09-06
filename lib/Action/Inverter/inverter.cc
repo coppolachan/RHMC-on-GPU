@@ -30,7 +30,7 @@ void invert (Fermion *out, Fermion *in, REAL res)
      {
      vr_1=(out->fermion[i]);
      vr_2=(loc_s->fermion[i]);
-     loc_s->fermion[i]=mass2*vr_1-vr_2;
+     loc_s->fermion[i]=GlobalParams::Instance().getMass2()*vr_1-vr_2;
      }
 
   // r=in-s, p=r, delta=(r,r)
@@ -58,7 +58,7 @@ void invert (Fermion *out, Fermion *in, REAL res)
         {
         vr_1=(loc_p->fermion[i]);
         vr_2=(loc_s->fermion[i]);
-        vr_3=mass2*vr_1 - vr_2;
+        vr_3=GlobalParams::Instance().getMass2()*vr_1 - vr_2;
         (loc_s->fermion[i])=vr_3; 
         d_vector1[i]=r_scalprod(vr_1,vr_3);
         }
@@ -98,7 +98,7 @@ void invert (Fermion *out, Fermion *in, REAL res)
         (loc_p->fermion[i])=vr_3;
         }
 
-     } while( (sqrt(lambda)>res) && cg<max_cg);
+  } while( (sqrt(lambda)>res) && cg<GlobalParams::Instance().getMaxCG());
   
   #if ((defined DEBUG_MODE) || (defined DEBUG_INVERTER))
   cout << "\tterminated invert terminated in "<<cg<<" iterations [";
@@ -110,14 +110,14 @@ void invert (Fermion *out, Fermion *in, REAL res)
      vr_1=(out->fermion[i]);
      vr_2=(loc_s->fermion[i]);
      vr_3=(in->fermion[i]);
-     vr_4=mass2*vr_1 -vr_2 -vr_3;
+     vr_4=GlobalParams::Instance().getMass2()*vr_1 -vr_2 -vr_3;
      d_vector1[i]=vr_4.l2norm2();
      }
   global_sum(d_vector1, sizeh);
   cout << " res/stop_res="<< sqrt(d_vector1[0])/res << " ,  stop_res="<< res << " ]"<<endl;
   #endif
 
-  if(cg==max_cg)
+  if(cg==GlobalParams::Instance().getMaxCG())
     {
     ofstream err_file;
     err_file.open(QUOTEME(ERROR_FILE), ios::app);   
@@ -210,7 +210,7 @@ void multips_shifted_invert (ShiftMultiFermion *out, MultiFermion *in, REAL res,
           { 
           vr_1=(loc_p->fermion[i]);
           vr_2=(loc_s->fermion[i]);
-          vr_3=mass2*vr_1-vr_2;
+          vr_3=GlobalParams::Instance().getMass2()*vr_1-vr_2;
           (loc_s->fermion[i])=vr_3;
           d_vector1[i]=r_scalprod(vr_1,vr_3);
           }
@@ -284,9 +284,9 @@ void multips_shifted_invert (ShiftMultiFermion *out, MultiFermion *in, REAL res,
           }
        delta=lambda;
 
-       } while(sqrt(lambda)>res && cg<max_cg); // end of cg iterations 
+       } while(sqrt(lambda)>res && cg<GlobalParams::Instance().getMaxCG()); // end of cg iterations 
 
-     if(cg==max_cg)
+     if(cg==GlobalParams::Instance().getMaxCG())
        {
        ofstream err_file;
        err_file.open(QUOTEME(ERROR_FILE), ios::app);   
@@ -327,7 +327,7 @@ void multips_shifted_invert (ShiftMultiFermion *out, MultiFermion *in, REAL res,
            vr_1=(loc_p->fermion[i]);
            vr_2=(loc_s->fermion[i]);
            vr_3=(in->fermion[pseudofermion][i]);
-           vr_4=(mass2+approx.RA_b[iter])*vr_1 -vr_2 -vr_3; // (M^dagM+RA_b)out-in
+           vr_4=(GlobalParams::Instance().getMass2()+approx.RA_b[iter])*vr_1 -vr_2 -vr_3; // (M^dagM+RA_b)out-in
            d_vector1[i]=vr_4.l2norm2();
            }
 

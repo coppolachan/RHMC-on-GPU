@@ -28,7 +28,7 @@ ImmMu       0.248
 
 # Fermionic temporal boundary condition 
 # (0 antiperiodic, else periodic)
-FermTempBc  0
+FermTempBC  0
 
 # Starting configuration
 # =0 ordered start, =1 random start, =2 start from saved conf
@@ -44,10 +44,10 @@ MeasureInterval       2
 # Molecular Dynamics Parameters
 # -----------------------------
 NumMD           12
-UseMultiStep    1
-# =0 does not use multistep,   
-# =1 2MN_multistep,  
-# =2 4MN_multistep
+UseMultiStep    2MN_MULTISTEP 
+# NO_MULTISTEP does not use multistep,   
+# 2MN_MULTISTEP 2MN_multistep,  
+# 4MN_MULTISTEP 4MN_multistep
 GaugeTimeScale  10
 
 # Number of random vectors for measurements

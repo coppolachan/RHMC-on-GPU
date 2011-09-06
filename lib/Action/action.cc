@@ -42,7 +42,7 @@ void Conf::loc_action(double *value, int init) const
            aux*=~(gauge_conf->u_work[index_mu + nnp[r][nu]]); // 3
            aux*=~(gauge_conf->u_work[index_nu + r]);          // 4
  
-           p=+beta_by_three*aux.retr();   // PLUS SIGN DUE TO STAGGERED PHASES
+           p=+GlobalParams::Instance().getBetaByThree()*aux.retr();   // PLUS SIGN DUE TO STAGGERED PHASES
        
            if(init==0)
              {    

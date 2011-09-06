@@ -56,7 +56,7 @@ InputTextParser::InputTextParser(std::string inputFileName) {
 }
 
 
-int InputTextParser::ParseFile() {
+void InputTextParser::ParseFile() {
   std::ifstream File(FileName.c_str());
   
   if ( File.fail() ){
@@ -128,6 +128,20 @@ void InputTextParser::get(const std::string ParameterName, double&val) {
     StringVal = ParameterMap[ParameterName];
     
     from_string(val, StringVal, std::dec);
+  }
+  else 
+    exit(1);
+  
+}
+
+void InputTextParser::get(const std::string ParameterName, float&val) {
+  double d_val;
+  std::string StringVal;
+  if (!CheckKey(ParameterName)) {
+    StringVal = ParameterMap[ParameterName];
+    
+    from_string(d_val, StringVal, std::dec);
+    val = (float) d_val;
   }
   else 
     exit(1);

@@ -19,10 +19,11 @@ protected:
   std::string FileName;
 
 public:
-  virtual int ParseFile() {};
+  virtual void ParseFile() {};
   virtual void List(){};
   //virtual functions cannot be templated 
   virtual void get(const std::string ParameterName, double &val){};
+  virtual void get(const std::string ParameterName, float &val){};
   virtual void get(const std::string ParameterName, int &val){};
   virtual void get(const std::string ParameterName, bool &val){};
   virtual void get(const std::string ParameterName, std::string &val){};

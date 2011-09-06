@@ -13,10 +13,10 @@ void rationalapprox_calc(void)
 
   int n=approx_metro; // The degree of the numerator polynomial
   int d=approx_metro; // The degree of the denominator polynomial
-  int y1=no_flavours; // The numerator of the exponent
+  int y1=GlobalParams::Instance().getNf(); // The numerator of the exponent
   int z1=8*no_ps;     // The denominator of the exponent
-  int precision=gmp_remez_precision; // The precision that gmp uses
-  double lambda_low=lambda_min_metro;
+  int precision=GlobalParams::Instance().getRemezPrecision(); // The precision that gmp uses
+  double lambda_low=GlobalParams::Instance().getLambdaMinMetro();
   double  lambda_high=1.0;              // The bounds of the approximation
 
   // The error from the approximation (the relative error is minimised
@@ -72,10 +72,10 @@ void rationalapprox_calc(void)
 
   n=approx_md; // The degree of the numerator polynomial
   d=approx_md; // The degree of the denominator polynomial
-  y1=no_flavours; // The numerator of the exponent
+  y1=GlobalParams::Instance().getNf(); // The numerator of the exponent
   z1=4*no_ps;     // The denominator of the exponent
-  precision=gmp_remez_precision; // The precision that gmp uses
-  lambda_low=lambda_min_md;      // The lower bounds of the approximation
+  precision=GlobalParams::Instance().getRemezPrecision(); // The precision that gmp uses
+  lambda_low=GlobalParams::Instance().getLambdaMinMD();      // The lower bounds of the approximation
 
   double *res2 = new double[n];
   double *pole2 = new double[d];
@@ -118,10 +118,10 @@ void rationalapprox_calc(void)
 
   n=approx_metro; // The degree of the numerator polynomial
   d=approx_metro; // The degree of the denominator polynomial
-  y1=no_flavours; // The numerator of the exponent
+  y1=GlobalParams::Instance().getNf(); // The numerator of the exponent
   z1=4*no_ps;     // The denominator of the exponent
-  precision=gmp_remez_precision; // The precision that gmp uses
-  lambda_low=lambda_min_metro;      // The lower bounds of the approximation
+  precision=GlobalParams::Instance().getRemezPrecision(); // The precision that gmp uses
+  lambda_low=GlobalParams::Instance().getResidueMetro();      // The lower bounds of the approximation
 
   double *res3 = new double[n];
   double *pole3 = new double[d];

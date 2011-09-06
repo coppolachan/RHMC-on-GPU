@@ -27,17 +27,17 @@ void update_nometro()
   use_stored=0;
 
   time_start=clock();
-  if(use_multistep==0)
+  if(GlobalParams::Instance().getMultistep().compare("NO_MULTISTEP")==0)
     {
     minimum_norm2_A();
     }
   else
     {
-    if(use_multistep==1)
+    if(GlobalParams::Instance().getMultistep().compare("2MN_MULTISTEP")==0)
       {
       multistep_2MN();
       }
-    if(use_multistep==2)
+    if(GlobalParams::Instance().getMultistep().compare("4MN_MULTISTEP")==0)
       {
       multistep_4MN();
       }
@@ -79,10 +79,10 @@ void update(int &acc)
   // create the chi spinor
   #ifndef PURE_GAUGE
     //chi=(M^dagM)^{alpha} phi      alpha=no_flaours/8/no_ps
-    first_inv_approx_calc(residue_metro);
+  first_inv_approx_calc(GlobalParams::Instance().getResidueMetro());
   #endif
 
-  if(update_iteration<therm_updates)
+  if(update_iteration<GlobalParams::Instance().getThermUpdates())
     { 
     update_nometro();
 
@@ -102,7 +102,7 @@ void update(int &acc)
 
     #ifndef PURE_GAUGE
       //phi=(M^dagM)^{-gamma} chi      gamma=no_flavours/4/no_ps
-      last_inv_approx_calc(residue_metro);
+      last_inv_approx_calc(GlobalParams::Instance().getResidueMetro());
     #endif
 
     #ifdef USE_GPU

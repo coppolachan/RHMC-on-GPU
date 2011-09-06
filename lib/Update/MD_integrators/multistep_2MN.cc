@@ -41,54 +41,54 @@ void multistep_2MN_gauge(REAL scale)
  // Step for the P
  // P' = P - l*dt*dS/dq
  calc_ipdot_gauge();
- temp=-ieps*complex<REAL>(scale*lambda,0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>(scale*lambda,0.0);
  momenta_sum_multiply(temp);
 
- for(md=1; md<gauge_scale; md++)
+ for(md=1; md<GlobalParams::Instance().getGaugeTimeScale(); md++)
     {
     // Step for the Q
     // Q' = exp[dt/2 *i P] Q
-    temp=iepsh*complex<REAL>(scale,0.0);
+    temp=GlobalParams::Instance().getIepsh()*complex<REAL>(scale,0.0);
     conf_left_exp_multiply(temp);
 
     // Step for the P
     // P' = P - (1-2l)*dt*dS/dq
     calc_ipdot_gauge();
-    temp=-ieps*complex<REAL>((1.0-2.0*lambda)*scale,0.0);
+    temp=-GlobalParams::Instance().getIeps()*complex<REAL>((1.0-2.0*lambda)*scale,0.0);
     momenta_sum_multiply(temp);
 
     // Step for the Q
     // Q' = exp[dt/2 *i P] Q
-    temp=iepsh*complex<REAL>(scale,0.0);
+    temp=GlobalParams::Instance().getIepsh()*complex<REAL>(scale,0.0);
     conf_left_exp_multiply(temp);
 
     // Step for the P
     // P' = P - 2l*dt*dS/dq
     calc_ipdot_gauge();
-    temp=-ieps*complex<REAL>(2.0*lambda*scale,0.0);
+    temp=-GlobalParams::Instance().getIeps()*complex<REAL>(2.0*lambda*scale,0.0);
     momenta_sum_multiply(temp);
     }
 
  // Step for the Q
  // Q' = exp[dt/2 *i P] Q
- temp=iepsh*complex<REAL>(scale,0.0);
+ temp=GlobalParams::Instance().getIepsh()*complex<REAL>(scale,0.0);
  conf_left_exp_multiply(temp);
 
  // Step for the P
  // P' = P - (1-2l)*dt*dS/dq
  calc_ipdot_gauge();
- temp=-ieps*complex<REAL>((1.0-2.0*lambda)*scale,0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>((1.0-2.0*lambda)*scale,0.0);
  momenta_sum_multiply(temp);
 
  // Step for the Q
  // Q' = exp[dt/2 *i P] Q
- temp=iepsh*complex<REAL>(scale,0.0);
+ temp=GlobalParams::Instance().getIepsh()*complex<REAL>(scale,0.0);
  conf_left_exp_multiply(temp);
 
  // Step for the P
  // P' = P - l*dt*dS/dq
  calc_ipdot_gauge();
- temp=-ieps*complex<REAL>(lambda*scale,0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>(lambda*scale,0.0);
  momenta_sum_multiply(temp);
 
  #ifdef DEBUG_MODE
@@ -109,17 +109,17 @@ void multistep_2MN(void)
 
  int md;
  const REAL lambda=0.1931833275037836; // Omelyan Et Al.
- const REAL gs=0.5/(REAL) gauge_scale;
+ const REAL gs=0.5/(REAL) GlobalParams::Instance().getGaugeTimeScale();
  complex<REAL> temp;
  
 
  // Step for the P
  // P' = P - l*dt*dS/dq
  calc_ipdot_fermion();
- temp=-ieps*complex<REAL>(lambda,0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>(lambda,0.0);
  momenta_sum_multiply(temp);
 
- for(md=1; md<no_md; md++)
+ for(md=1; md<GlobalParams::Instance().getNumMD(); md++)
     {
     // Step for the Q
     // Q' = exp[dt/2 *i P] Q
@@ -128,7 +128,7 @@ void multistep_2MN(void)
     // Step for the P
     // P' = P - (1-2l)*dt*dS/dq
     calc_ipdot_fermion();
-    temp=-ieps*complex<REAL>((1.0-2.0*lambda),0.0);
+    temp=-GlobalParams::Instance().getIeps()*complex<REAL>((1.0-2.0*lambda),0.0);
     momenta_sum_multiply(temp);
 
     // Step for the Q
@@ -138,7 +138,7 @@ void multistep_2MN(void)
     // Step for the P
     // P' = P - 2l*dt*dS/dq
     calc_ipdot_fermion();
-    temp=-ieps*complex<REAL>(2.0*lambda,0.0);
+    temp=-GlobalParams::Instance().getIeps()*complex<REAL>(2.0*lambda,0.0);
     momenta_sum_multiply(temp);
     }
 
@@ -149,7 +149,7 @@ void multistep_2MN(void)
  // Step for the P
  // P' = P - (1-2l)*dt*dS/dq
  calc_ipdot_fermion();
- temp=-ieps*complex<REAL>((1.0-2.0*lambda),0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>((1.0-2.0*lambda),0.0);
  momenta_sum_multiply(temp);
 
  // Step for the Q
@@ -159,7 +159,7 @@ void multistep_2MN(void)
  // Step for the P
  // P' = P - l*dt*dS/dq
  calc_ipdot_fermion();
- temp=-ieps*complex<REAL>(lambda,0.0);
+ temp=-GlobalParams::Instance().getIeps()*complex<REAL>(lambda,0.0);
  momenta_sum_multiply(temp);
 
  #ifdef DEBUG_MODE

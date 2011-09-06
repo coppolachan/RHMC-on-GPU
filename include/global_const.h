@@ -10,13 +10,6 @@ using namespace std;
 
 const int max_approx_order=(approx_metro>approx_md) ? approx_metro : approx_md;
 
-// derived mass constants
-const REAL one_by_mass=1.0/mass;
-const REAL mass2=mass*mass;
-
-// derived beta constants
-const REAL beta_by_three=beta/3.0;
-
 // derived lattice related constants
 const long int vol1=nx;
 const long int vol2=ny*vol1;
@@ -47,12 +40,7 @@ const REAL eim_sin=sin(immu);
 //  #endif
 #endif
 
-// molecular dynamic related derived constants
-#ifndef __CUDACC__  // if we are not inside nvcc
-const REAL epsilon=1.0/((REAL) no_md);
-const complex<REAL> ieps=complex<REAL>(0.0, epsilon);
-const complex<REAL> iepsh=ieps*complex<REAL>(0.5,0.0);
-#endif
+
 
 // mathematical constants
 const REAL one_by_three=0.3333333333333333333333333333333333333333333333333333333333333333333;

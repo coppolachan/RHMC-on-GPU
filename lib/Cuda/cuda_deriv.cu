@@ -703,7 +703,7 @@ extern "C" void  cuda_gauge_deriv(int ipdot_init)
   size_t gauge_field_size = sizeof(float)*no_links*12;
 
   //Copy to device constant memory
-  float factor = (float) 1.0*beta/3.0;
+  float factor = (float) 1.0*GlobalParams::Instance().getBetaByThree();
   cudaSafe(AT,cudaMemcpyToSymbol(f_aux_dev, &factor, sizeof(float), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
 
   // initialize ipdot_device to zero if ipdot_init==0

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <fstream>
 #include <complex>
-#include "include/global_var.h"
 #include "include/tools.h"
 
 #ifdef USE_GPU
@@ -30,7 +29,7 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
   c_vector1=new complex<double>[size];  // complex auxiliary vectors to be used in energy and baryon 
   c_vector2=new complex<double>[size];  // density when imaginary chemical potential is used
 
-  if(rand_vect>0)
+  if(GlobalParams::Instance().getRandVect()>0)
     {
     int k, iter;
     long int i, j, index1, index2;
@@ -43,7 +42,7 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
     loc_b_dens=complex<double>(0.0,0.0);
     loc_p_dens=complex<double>(0.0,0.0);
  
-    for(iter=0; iter<rand_vect; iter++)
+    for(iter=0; iter<GlobalParams::Instance().getRandVect(); iter++)
        {
        rnd_e->z2noise();
        rnd_o->z2noise();
@@ -51,11 +50,12 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
        Deo(phi_e, rnd_o);
        for(i=0; i<sizeh; i++)
           {
-          (phi_e->fermion[i])=mass*(rnd_e->fermion[i])-(phi_e->fermion[i]);
+	    (phi_e->fermion[i])=GlobalParams::Instance().getMass()*
+	      (rnd_e->fermion[i])-(phi_e->fermion[i]);
           }
 
        #ifndef USE_GPU
-          invert(chi_e, phi_e, residue_metro);
+          invert(chi_e, phi_e, GlobalParams::Instance().getResidueMetro());
        #else
          smartpack_fermion_d(simple_fermion_packed, phi_e);
          cuda_meas_init();
@@ -66,8 +66,8 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
          get_order(order, *meas_inv_coeff);  // order=1
          get_shifts(shifts, *meas_inv_coeff); // just one shift equal to 0.0
 
-         cuda_shifted_inverter_d(residue_metro, shifts, order, psferm, &cg);
-         if(cg==max_cg)
+         cuda_shifted_inverter_d(GlobalParams::Instance().getResidueMetro(), shifts, order, psferm, &cg);
+         if(cg==GlobalParams::Instance().getMaxCG())
            {
            ofstream err_file;
            err_file.open(QUOTEME(ERROR_FILE), ios::app);   
@@ -83,7 +83,8 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
        Doe(phi_o, chi_e);
        for(i=0; i<sizeh; i++)
           { 
-          chi_o->fermion[i]=one_by_mass*(rnd_o->fermion[i] - phi_o->fermion[i]);
+	    chi_o->fermion[i]=GlobalParams::Instance().getMassInv()*
+	      (rnd_o->fermion[i] - phi_o->fermion[i]);
           } 
 
        // chiral condensate calculation
@@ -93,7 +94,8 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
           c_vector1[i]+=c_scalprod(rnd_e->fermion[i], chi_e->fermion[i]);
           }
        global_sum(c_vector1,sizeh);
-       loc_chiral+=c_vector1[0]*complex<double>(no_flavours*0.25*inv_size,0.0); 
+       loc_chiral+=c_vector1[0]*
+	 complex<double>(GlobalParams::Instance().getNf()*0.25*inv_size,0.0); 
    
        #ifndef IM_CHEM_POT
          // energy and baryon density calculation
@@ -125,9 +127,9 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
             c_vector2[i]+=p1+p2;
             }
          global_sum(c_vector1,sizeh);
-         loc_e_dens+=c_vector1[0]*complex<double>(0.5*no_flavours*0.25*inv_size,0.0);  // energy density
+         loc_e_dens+=c_vector1[0]*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);  // energy density
          global_sum(c_vector2,sizeh);
-         loc_b_dens+=c_vector2[0]*complex<double>(0.5*no_flavours*0.25*inv_size,0.0);  // barion density
+         loc_b_dens+=c_vector2[0]*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);  // barion density
        #else
          // energy and baryon density calculation
          for(i=0; i<sizeh; i++)   // i=even index
@@ -154,8 +156,8 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
          global_sum(c_vector1,sizeh);
          global_sum(c_vector2,sizeh);
 
-         loc_e_dens+=(eim*c_vector1[0]-emim*c_vector2[0])*complex<double>(0.5*no_flavours*0.25*inv_size,0.0);  // energy density
-         loc_b_dens+=(eim*c_vector1[0]+emim*c_vector2[0])*complex<double>(0.5*no_flavours*0.25*inv_size,0.0);  // barion density
+         loc_e_dens+=(eim*c_vector1[0]-emim*c_vector2[0])*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);  // energy density
+         loc_b_dens+=(eim*c_vector1[0]+emim*c_vector2[0])*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);  // barion density
        #endif
 
        // pressure density calculation
@@ -185,10 +187,10 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
              }
           }
        global_sum(c_vector1,sizeh);
-       loc_p_dens+=c_vector1[0]*complex<double>(0.5*no_flavours*0.25*inv_size,0.0);     // pressure density
+       loc_p_dens+=c_vector1[0]*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);     // pressure density
        }
 
-    p1=complex<double>(1.0/(double) rand_vect, 0.0);
+    p1=complex<double>(1.0/(double) GlobalParams::Instance().getRandVect(), 0.0);
 
     chiral=loc_chiral*p1;
     e_dens=loc_e_dens*p1;

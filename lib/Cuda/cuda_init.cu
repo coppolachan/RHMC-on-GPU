@@ -35,7 +35,8 @@ extern "C" void cuda_init0(void)
 
 
   // initialize constants
-  float mass_l=(float) mass;
+  float mass_l=(float) GlobalParams::Instance().getMass();
+  double mass = GlobalParams::Instance().getMass();
   cudaSafe(AT,cudaMemcpyToSymbol(mass_dev, &mass_l, sizeof(float), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
   cudaSafe(AT,cudaMemcpyToSymbol(mass_d_dev, &mass, sizeof(double), 0, cudaMemcpyHostToDevice), "cudaMemcpyToSymbol");
   int size_l=(int) size;

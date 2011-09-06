@@ -858,7 +858,7 @@ extern "C" void cuda_shifted_inverter_d(const double residual,
   InitializeShiftVarsD(bs, z, b, p_0, smf_device + ps_offset, offset_2f, num_shifts);
 
   conv = 0;
-  for (k=1; k < max_cg && !conv ; ++k) 
+  for (k=1; k < GlobalParams::Instance().getMaxCG() && !conv ; ++k) 
    {
     //  a[k+1] := |r[k]|**2 / |r[k-1]|**2 ; 
     //  Update p
