@@ -11,13 +11,24 @@
 #include "include/geometry.h"
 #include "lib/Tools/exception.h"
 
+#include "lib/Tools/InputParser/InputParser.h"
+#include "lib/Tools/InputParser/InputTextParser.h"
+
 int initialize(void)
   {
   #ifdef DEBUG_MODE
   cout << "DEBUG: inside init ..."<<endl;
   #endif
   
+  int test_noflav;
+
   try{
+    
+    InputParser *Input = new InputTextParser("input_parameters");
+    GlobalParams::Instance().setParams(*Input);
+    GlobalParams::Instance().listParams();
+
+
      // initialize random number generator
      initrand(rand_seed);
 

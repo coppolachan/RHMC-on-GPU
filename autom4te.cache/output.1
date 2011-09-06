@@ -4497,7 +4497,7 @@ if test "${with_mpfr+set}" = set; then :
   withval=$with_mpfr; MPFR_lib_check="$with_mpfr/lib64 $with_mpfr/lib"
 		 MPFR_inc_check="$with_mpfr/include"
 else
-  MPFR_lib_check="/usr/local/lib64 /usr/local/lib /usr/lib64 /usr/lib"
+  MPFR_lib_check="/usr/local/lib64 /usr/lib64 /usr/local/lib /usr/lib"
 		 MPFR_inc_check="/usr/local/include /usr/include"
    		
 fi
@@ -4522,7 +4522,8 @@ $as_echo_n "checking for MPFR library directory... " >&6; }
 
 	if test -z "$MPFR_libdir"
 	then
-		as_fn_error $? "Didn't find the MPFR library dir in '$MPFR_lib_check'
+		as_fn_error $? "
+			      Didn't find the MPFR library dir in '$MPFR_lib_check'
 	                      Check path if already installed\"
 	                      Download at: http://www.mpfr.org/\"" "$LINENO" 5 
 	fi

@@ -13,6 +13,7 @@
 #include "lib/Tools/RationalApprox/rationalapprox.h"
 #include "lib/Action/action.h"
 
+
 // perform 1 update without metropolis test
 void update_nometro()
   {

@@ -1,6 +1,7 @@
 AC_DEFUN([MPFR_DEVEL],
 [
-AC_CACHE_CHECK([for MPFR devel stuff], ac_cv_mpfr_devel,
+AC_CACHE_CHECK([for MPFR devel stuff],
+		ac_cv_mpfr_devel,
 [
 	#
 	# Set up configure script macros
@@ -11,7 +12,7 @@ AC_HELP_STRING([--with-mpfr=PATH],
    		[Path containing the MPFR Multiple Precision library [default=/usr/lib or /usr/local/lib]]),
 		[MPFR_lib_check="$with_mpfr/lib64 $with_mpfr/lib"
 		 MPFR_inc_check="$with_mpfr/include"],
-		[MPFR_lib_check="/usr/local/lib64 /usr/local/lib /usr/lib64 /usr/lib"
+		[MPFR_lib_check="/usr/local/lib64 /usr/lib64 /usr/local/lib /usr/lib"
 		 MPFR_inc_check="/usr/local/include /usr/include"]
    		)
 		
@@ -33,7 +34,8 @@ AC_HELP_STRING([--with-mpfr=PATH],
 
 	if test -z "$MPFR_libdir"
 	then
-		AC_MSG_ERROR([[Didn't find the MPFR library dir in '$MPFR_lib_check']
+		AC_MSG_ERROR([[]
+			      [Didn't find the MPFR library dir in '$MPFR_lib_check']
 	                      [Check path if already installed"]
 	                      [Download at: http://www.mpfr.org/"]])
 	fi

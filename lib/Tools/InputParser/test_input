@@ -1,0 +1,9 @@
+Parameter1    2
+# Comment (use only spaces, no tabs)
+# ---------------
+
+Beta     20.34
+Parameter3    string
+Parameter4    true
+Parameter5    false
+

@@ -65,6 +65,9 @@ rhmc_SOURCES = 	./Main/rhmc.cc		\
 	./Tools/Rand/random.cc				\
 	./Tools/Rand/RANDOM/dSFMT.c			\
 	./Tools/vec3.cc					\
+	./Tools/InputParser/InputParser.cc		\
+	./Tools/InputParser/InputTextParser.cc		\
+	./Main/parameters.cpp				\
 	$(CUDA_SRCS)
 
 #	./Tools/InputParser/InputParser.cc		
@@ -87,6 +90,7 @@ include_HEADERS = 	$(top_srcdir)/include/configuration.h	\
 	$(top_srcdir)/include/rhmc_include.h			\
 	$(top_srcdir)/include/tools.h				\
 	$(top_srcdir)/include/update.h				\
+	$(top_srcdir)/include/singleton.h			\
 	./Action/action.h				\
 	./Action/fermionforce.h				\
 	./Action/fermions.h				\
@@ -122,7 +126,10 @@ include_HEADERS = 	$(top_srcdir)/include/configuration.h	\
 	./Cuda/cuda_dslash_kernels.h			\
 	./Cuda/cuda_inversion_kernels.h			\
 	./Cuda/cuda_tool_kernels.h			\
-	./Cuda/cuda_update_kernels.h
+	./Cuda/cuda_update_kernels.h			\
+	./Tools/InputParser/InputParser.h		\
+	./Tools/InputParser/InputTextParser.h		\
+	./Tools/InputParser/StringTools.h		
 
 #	./Tools/InputParser/InputParser.h		
 #	./Tools/InputParser/InputTextParser.h		

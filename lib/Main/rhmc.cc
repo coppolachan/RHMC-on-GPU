@@ -57,7 +57,7 @@ int main(void)
 	   {
 	     out_file.open(QUOTEME(DATA_FILE), ios::out); 
 	     out_file << "## "<< nx << " " << ny << " " << nz << " "<< nt << " ";
-	     out_file << no_flavours << " " << mass << " " << beta << "\n";
+	     out_file << GlobalParams::Instance().getNf() << " " << mass << " " << beta << "\n";
 	   }
 	 out_file.precision(12);
 	 
@@ -264,7 +264,7 @@ void simulation_details(void)
   cout <<"Lattice dimensions: nx = "<<nx<<"  ny = "<<ny<<"  nz = "<<nz<<"  nt = "<<nt<<"\n";
   
 #ifndef PURE_GAUGE
-  cout <<"Number of flavours = "<< no_flavours<<"\n";
+  cout <<"Number of flavours = "<< GlobalParams::Instance().getNf()<<"\n";
   cout <<"Quark mass =  "<< mass<<"\n";
 #else
   cout <<"Pure gauge simulation\n";

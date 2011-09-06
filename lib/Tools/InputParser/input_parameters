@@ -1,0 +1,77 @@
+# RHMC input parameters template file
+# ===================================
+# Warning: do not use tabs
+# only spaces are allowed
+# Comment using '#'
+# Do not use spaces in parameter names
+
+# Lattice Dimensions
+# ------------------
+LatticeX    8
+LatticeY    8
+LatticeZ    8
+LatticeT    4
+
+# Run Parameters
+# --------------
+NumFlavors  2
+Beta        5.264
+Mass        0.01
+
+# Random Seed (0 uses machine clock)
+Rand_Seed   0
+
+# Imaginary chemical potential (if used)
+# --------------------------------------
+ImmMu       0.248
+
+# Fermionic temporal boundary condition 
+# (0 antiperiodic, else periodic)
+FermTempBc  0
+
+# Starting configuration
+# =0 ordered start, =1 random start, =2 start from saved conf
+StartConf  0
+
+# Update Parameters
+# -----------------
+RunUpdateIterations   100
+ThermUpdates          0
+SaveConfInterval      20
+MeasureInterval       2
+
+# Molecular Dynamics Parameters
+# -----------------------------
+NumMD           12
+UseMultiStep    1
+# =0 does not use multistep,   
+# =1 2MN_multistep,  
+# =2 4MN_multistep
+GaugeTimeScale  10
+
+# Number of random vectors for measurements
+RandVect     1
+
+# RHMC parameters
+# ---------------
+MaxCG               5000
+NumPseudoFerm       2
+GMP_RemezPrec       100
+# if stopping residue < InvSingleDblPrec 
+# use double prec, else single
+InvSingleDblPrec    1.0e-4
+
+# Rational approximations for Metropolis
+# --------------------------------------
+ApproxMetro     15
+LambdaMinMetro  1.0e-5
+ResidueMetro    1.0e-9
+ApproxMD        8
+LambdaMinMD     1.0e-5
+ResidueMD       1.0e-3
+
+
+# GPU devices
+# -----------
+GPUDevice      0
+

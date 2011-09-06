@@ -2,6 +2,25 @@
 #define PARAMETERS_H_
 
 #include "include/global_macro.h" //for REAL
+#include "include/singleton.h"
+#include "lib/Tools/InputParser/InputParser.h"
+
+
+
+
+class Params{
+ private:
+  static int no_flavors;
+  
+ public:
+  static void setParams(InputParser &);
+  static int getNf(){return no_flavors;}
+  static void listParams();
+};
+
+typedef Singleton<Params> GlobalParams;
+
+
 
 // lattice dimensions
 const int nx=8;

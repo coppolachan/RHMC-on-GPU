@@ -74,6 +74,8 @@ am__rhmc_SOURCES_DIST = ./Main/rhmc.cc ./Main/init.cc \
 	./Tools/exist_file.cc ./Tools/gauss.cc \
 	./Tools/Packer/packer.cc ./Tools/Rand/random.cc \
 	./Tools/Rand/RANDOM/dSFMT.c ./Tools/vec3.cc \
+	./Tools/InputParser/InputParser.cc \
+	./Tools/InputParser/InputTextParser.cc ./Main/parameters.cpp \
 	./Cuda/DeviceInfo/device_info.cu ./Cuda/cuda_init.cu
 am__dirstamp = $(am__leading_dot)dirstamp
 @ENABLE_CUDA_TRUE@am__objects_1 =  \
@@ -91,7 +93,9 @@ am_rhmc_OBJECTS = rhmc.$(OBJEXT) init.$(OBJEXT) geometry.$(OBJEXT) \
 	rationalapprox_calc.$(OBJEXT) rationalapprox.$(OBJEXT) \
 	alg_remez.$(OBJEXT) exception.$(OBJEXT) exist_file.$(OBJEXT) \
 	gauss.$(OBJEXT) packer.$(OBJEXT) random.$(OBJEXT) \
-	dSFMT.$(OBJEXT) vec3.$(OBJEXT) $(am__objects_1)
+	dSFMT.$(OBJEXT) vec3.$(OBJEXT) InputParser.$(OBJEXT) \
+	InputTextParser.$(OBJEXT) parameters.$(OBJEXT) \
+	$(am__objects_1)
 rhmc_OBJECTS = $(am_rhmc_OBJECTS)
 rhmc_LDADD = $(LDADD)
 am__test_device_SOURCES_DIST = ./Cuda/DeviceInfo/test_device.cu
@@ -318,6 +322,9 @@ rhmc_SOURCES = ./Main/rhmc.cc		\
 	./Tools/Rand/random.cc				\
 	./Tools/Rand/RANDOM/dSFMT.c			\
 	./Tools/vec3.cc					\
+	./Tools/InputParser/InputParser.cc		\
+	./Tools/InputParser/InputTextParser.cc		\
+	./Main/parameters.cpp				\
 	$(CUDA_SRCS)
 
 include_HEADERS = $(top_srcdir)/include/configuration.h	\
@@ -332,6 +339,7 @@ include_HEADERS = $(top_srcdir)/include/configuration.h	\
 	$(top_srcdir)/include/rhmc_include.h			\
 	$(top_srcdir)/include/tools.h				\
 	$(top_srcdir)/include/update.h				\
+	$(top_srcdir)/include/singleton.h			\
 	./Action/action.h				\
 	./Action/fermionforce.h				\
 	./Action/fermions.h				\
@@ -367,7 +375,10 @@ include_HEADERS = $(top_srcdir)/include/configuration.h	\
 	./Cuda/cuda_dslash_kernels.h			\
 	./Cuda/cuda_inversion_kernels.h			\
 	./Cuda/cuda_tool_kernels.h			\
-	./Cuda/cuda_update_kernels.h
+	./Cuda/cuda_update_kernels.h			\
+	./Tools/InputParser/InputParser.h		\
+	./Tools/InputParser/InputTextParser.h		\
+	./Tools/InputParser/StringTools.h		
 
 
 #	./Tools/InputParser/InputParser.h		
@@ -390,7 +401,7 @@ EXTRA_DIST = ./Cuda/cuda_deo.cu				\
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .cu .$(OBJEXT) .c .cc .o .obj
+.SUFFIXES: .cu .$(OBJEXT) .c .cc .cpp .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -531,6 +542,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/InputParser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/InputTextParser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/action.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/alg_remez.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chiralmeas.Po@am__quote@
@@ -556,6 +569,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multistep_2MN.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multistep_4MN.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/packer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parameters.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/random.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rationalapprox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rationalapprox_calc.Po@am__quote@
@@ -1141,6 +1155,70 @@ vec3.obj: ./Tools/vec3.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='./Tools/vec3.cc' object='vec3.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o vec3.obj `if test -f './Tools/vec3.cc'; then $(CYGPATH_W) './Tools/vec3.cc'; else $(CYGPATH_W) '$(srcdir)/./Tools/vec3.cc'; fi`
+
+InputParser.o: ./Tools/InputParser/InputParser.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT InputParser.o -MD -MP -MF $(DEPDIR)/InputParser.Tpo -c -o InputParser.o `test -f './Tools/InputParser/InputParser.cc' || echo '$(srcdir)/'`./Tools/InputParser/InputParser.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/InputParser.Tpo $(DEPDIR)/InputParser.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='./Tools/InputParser/InputParser.cc' object='InputParser.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o InputParser.o `test -f './Tools/InputParser/InputParser.cc' || echo '$(srcdir)/'`./Tools/InputParser/InputParser.cc
+
+InputParser.obj: ./Tools/InputParser/InputParser.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT InputParser.obj -MD -MP -MF $(DEPDIR)/InputParser.Tpo -c -o InputParser.obj `if test -f './Tools/InputParser/InputParser.cc'; then $(CYGPATH_W) './Tools/InputParser/InputParser.cc'; else $(CYGPATH_W) '$(srcdir)/./Tools/InputParser/InputParser.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/InputParser.Tpo $(DEPDIR)/InputParser.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='./Tools/InputParser/InputParser.cc' object='InputParser.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o InputParser.obj `if test -f './Tools/InputParser/InputParser.cc'; then $(CYGPATH_W) './Tools/InputParser/InputParser.cc'; else $(CYGPATH_W) '$(srcdir)/./Tools/InputParser/InputParser.cc'; fi`
+
+InputTextParser.o: ./Tools/InputParser/InputTextParser.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT InputTextParser.o -MD -MP -MF $(DEPDIR)/InputTextParser.Tpo -c -o InputTextParser.o `test -f './Tools/InputParser/InputTextParser.cc' || echo '$(srcdir)/'`./Tools/InputParser/InputTextParser.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/InputTextParser.Tpo $(DEPDIR)/InputTextParser.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='./Tools/InputParser/InputTextParser.cc' object='InputTextParser.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o InputTextParser.o `test -f './Tools/InputParser/InputTextParser.cc' || echo '$(srcdir)/'`./Tools/InputParser/InputTextParser.cc
+
+InputTextParser.obj: ./Tools/InputParser/InputTextParser.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT InputTextParser.obj -MD -MP -MF $(DEPDIR)/InputTextParser.Tpo -c -o InputTextParser.obj `if test -f './Tools/InputParser/InputTextParser.cc'; then $(CYGPATH_W) './Tools/InputParser/InputTextParser.cc'; else $(CYGPATH_W) '$(srcdir)/./Tools/InputParser/InputTextParser.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/InputTextParser.Tpo $(DEPDIR)/InputTextParser.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='./Tools/InputParser/InputTextParser.cc' object='InputTextParser.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o InputTextParser.obj `if test -f './Tools/InputParser/InputTextParser.cc'; then $(CYGPATH_W) './Tools/InputParser/InputTextParser.cc'; else $(CYGPATH_W) '$(srcdir)/./Tools/InputParser/InputTextParser.cc'; fi`
+
+parameters.o: ./Main/parameters.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT parameters.o -MD -MP -MF $(DEPDIR)/parameters.Tpo -c -o parameters.o `test -f './Main/parameters.cpp' || echo '$(srcdir)/'`./Main/parameters.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/parameters.Tpo $(DEPDIR)/parameters.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='./Main/parameters.cpp' object='parameters.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o parameters.o `test -f './Main/parameters.cpp' || echo '$(srcdir)/'`./Main/parameters.cpp
+
+parameters.obj: ./Main/parameters.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT parameters.obj -MD -MP -MF $(DEPDIR)/parameters.Tpo -c -o parameters.obj `if test -f './Main/parameters.cpp'; then $(CYGPATH_W) './Main/parameters.cpp'; else $(CYGPATH_W) '$(srcdir)/./Main/parameters.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/parameters.Tpo $(DEPDIR)/parameters.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='./Main/parameters.cpp' object='parameters.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o parameters.obj `if test -f './Main/parameters.cpp'; then $(CYGPATH_W) './Main/parameters.cpp'; else $(CYGPATH_W) '$(srcdir)/./Main/parameters.cpp'; fi`
+
+.cpp.o:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ $<
+
+.cpp.obj:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 install-includeHEADERS: $(include_HEADERS)
 	@$(NORMAL_INSTALL)
 	test -z "$(includedir)" || $(MKDIR_P) "$(DESTDIR)$(includedir)"
