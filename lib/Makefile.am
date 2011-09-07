@@ -70,9 +70,6 @@ rhmc_SOURCES = 	./Main/rhmc.cc		\
 	./Main/parameters.cpp				\
 	$(CUDA_SRCS)
 
-#	./Tools/InputParser/InputParser.cc		
-#	./Tools/InputParser/InputTextParser.cc		
-
 
 if ENABLE_CUDA
 dist_PROGRAMS = $(TMP_DIST) 
@@ -131,10 +128,6 @@ include_HEADERS = 	$(top_srcdir)/include/configuration.h	\
 	./Tools/InputParser/InputTextParser.h		\
 	./Tools/InputParser/StringTools.h		
 
-#	./Tools/InputParser/InputParser.h		
-#	./Tools/InputParser/InputTextParser.h		
-#	./Tools/InputParser/StringTools.h		
-
 EXTRA_DIST = ./Cuda/cuda_deo.cu				\
 	./Cuda/cuda_deriv.cu				\
 	./Cuda/cuda_dslash_dd_eo.cu			\
@@ -147,4 +140,6 @@ EXTRA_DIST = ./Cuda/cuda_deo.cu				\
 	./Cuda/cuda_inverter_d.cu			\
 	./Cuda/cuda_mom_sum_mul.cu			\
 	./Cuda/cuda_reduce.cu				\
-	./Cuda/cuda_sol_sum.cu
+	./Cuda/cuda_sol_sum.cu				\
+	./Cuda/cuda_dslash_dd_eo_chemPot.cu		\
+	./Cuda/cuda_dslash_eo_chemPot.cu

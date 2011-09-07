@@ -60,13 +60,17 @@ ShiftFermion::ShiftFermion(void)
 
 // base construction
 MultiFermion::MultiFermion(void)
- {
- for(int i=0; i<no_ps; i++)
+{
+  fermion = new Vec3 * [GlobalParams::Instance().getNumPS()];
+  for (int i = 0; i < GlobalParams::Instance().getNumPS(); i++)
+    fermion[i] = new Vec3[sizeh]; 
+ 
+  for(int i=0; i<GlobalParams::Instance().getNumPS(); i++)
     {
-    for(long int j=0; j<sizeh; j++)
-       {
-       fermion[i][j].zero();
-       }
+      for(long int j=0; j<sizeh; j++)
+	{
+	  fermion[i][j].zero();
+	}
     }
  }
 

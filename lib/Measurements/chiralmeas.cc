@@ -100,7 +100,7 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
        loc_chiral+=c_vector1[0]*
 	 complex<double>(GlobalParams::Instance().getNf()*0.25*inv_size,0.0); 
    
-       #ifndef IM_CHEM_POT
+       if(!GlobalChemPotPar::Instance().UseChem()){
          // energy and baryon density calculation
          for(i=0; i<sizeh; i++)   // i=even index
             {
@@ -133,7 +133,7 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
          loc_e_dens+=c_vector1[0]*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);  // energy density
          global_sum(c_vector2,sizeh);
          loc_b_dens+=c_vector2[0]*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);  // barion density
-       #else
+       } else {
          // energy and baryon density calculation
          for(i=0; i<sizeh; i++)   // i=even index
             {
@@ -161,7 +161,7 @@ void chiral_meas(complex<REAL> &chiral, complex<REAL> &e_dens, complex<REAL> &b_
 
          loc_e_dens+=(eim*c_vector1[0]-emim*c_vector2[0])*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);  // energy density
          loc_b_dens+=(eim*c_vector1[0]+emim*c_vector2[0])*complex<double>(0.5*GlobalParams::Instance().getNf()*0.25*inv_size,0.0);  // barion density
-       #endif
+       }
 
        // pressure density calculation
        for(i=0; i<sizeh; i++)    // i=even

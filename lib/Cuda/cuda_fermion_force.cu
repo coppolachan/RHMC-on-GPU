@@ -14,9 +14,92 @@ __global__ void FermionProductEvenKernel(const float2 *ferm,
   float2 ferm_in_0, ferm_in_1, ferm_in_2;
   float2 Mferm_in_0, Mferm_in_1, Mferm_in_2;
 
-  #ifdef IM_CHEM_POT 
+  ferm_in_0=ferm[             idx];
+  ferm_in_1=ferm[  size_dev + idx];
+  ferm_in_2=ferm[2*size_dev + idx];
+
+  for(mu=0; mu<3; mu++)
+     {
+     site_table[threadIdx.x]=table[idx+(4+mu)*size_dev]; // nnp[idx][mu] 
+
+     Mferm_in_0=Mferm[             site_table[threadIdx.x]];
+     Mferm_in_1=Mferm[  size_dev + site_table[threadIdx.x]];
+     Mferm_in_2=Mferm[2*size_dev + site_table[threadIdx.x]];
+
+     // ris=Mferm^~ferm
+     aux_l[idx +              9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_0.x*ferm_in_0.x + Mferm_in_0.y*ferm_in_0.y);
+     aux_l[idx +              9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_0.x*ferm_in_0.y + Mferm_in_0.y*ferm_in_0.x);
+     aux_l[idx +   size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_0.x*ferm_in_1.x + Mferm_in_0.y*ferm_in_1.y);
+     aux_l[idx +   size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_0.x*ferm_in_1.y + Mferm_in_0.y*ferm_in_1.x);
+     aux_l[idx + 2*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_0.x*ferm_in_2.x + Mferm_in_0.y*ferm_in_2.y);
+     aux_l[idx + 2*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_0.x*ferm_in_2.y + Mferm_in_0.y*ferm_in_2.x);
+
+     aux_l[idx + 3*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_1.x*ferm_in_0.x + Mferm_in_1.y*ferm_in_0.y);
+     aux_l[idx + 3*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_1.x*ferm_in_0.y + Mferm_in_1.y*ferm_in_0.x);
+     aux_l[idx + 4*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_1.x*ferm_in_1.x + Mferm_in_1.y*ferm_in_1.y);
+     aux_l[idx + 4*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_1.x*ferm_in_1.y + Mferm_in_1.y*ferm_in_1.x);
+     aux_l[idx + 5*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_1.x*ferm_in_2.x + Mferm_in_1.y*ferm_in_2.y);
+     aux_l[idx + 5*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_1.x*ferm_in_2.y + Mferm_in_1.y*ferm_in_2.x);
+
+     aux_l[idx + 6*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_2.x*ferm_in_0.x + Mferm_in_2.y*ferm_in_0.y);
+     aux_l[idx + 6*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_2.x*ferm_in_0.y + Mferm_in_2.y*ferm_in_0.x);
+     aux_l[idx + 7*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_2.x*ferm_in_1.x + Mferm_in_2.y*ferm_in_1.y);
+     aux_l[idx + 7*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_2.x*ferm_in_1.y + Mferm_in_2.y*ferm_in_1.x);
+     aux_l[idx + 8*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_2.x*ferm_in_2.x + Mferm_in_2.y*ferm_in_2.y);
+     aux_l[idx + 8*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_2.x*ferm_in_2.y + Mferm_in_2.y*ferm_in_2.x);
+     }
+
+  for(mu=3; mu<4; mu++)
+     {
+     site_table[threadIdx.x]=table[idx+(4+mu)*size_dev]; // nnp[idx][mu] 
+
+       Mferm_in_0=Mferm[             site_table[threadIdx.x]];
+       Mferm_in_1=Mferm[  size_dev + site_table[threadIdx.x]];
+       Mferm_in_2=Mferm[2*size_dev + site_table[threadIdx.x]];
+
+     // ris=Mferm^~ferm
+     aux_l[idx +              9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_0.x*ferm_in_0.x + Mferm_in_0.y*ferm_in_0.y);
+     aux_l[idx +              9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_0.x*ferm_in_0.y + Mferm_in_0.y*ferm_in_0.x);
+     aux_l[idx +   size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_0.x*ferm_in_1.x + Mferm_in_0.y*ferm_in_1.y);
+     aux_l[idx +   size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_0.x*ferm_in_1.y + Mferm_in_0.y*ferm_in_1.x);
+     aux_l[idx + 2*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_0.x*ferm_in_2.x + Mferm_in_0.y*ferm_in_2.y);
+     aux_l[idx + 2*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_0.x*ferm_in_2.y + Mferm_in_0.y*ferm_in_2.x);
+
+     aux_l[idx + 3*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_1.x*ferm_in_0.x + Mferm_in_1.y*ferm_in_0.y);
+     aux_l[idx + 3*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_1.x*ferm_in_0.y + Mferm_in_1.y*ferm_in_0.x);
+     aux_l[idx + 4*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_1.x*ferm_in_1.x + Mferm_in_1.y*ferm_in_1.y);
+     aux_l[idx + 4*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_1.x*ferm_in_1.y + Mferm_in_1.y*ferm_in_1.x);
+     aux_l[idx + 5*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_1.x*ferm_in_2.x + Mferm_in_1.y*ferm_in_2.y);
+     aux_l[idx + 5*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_1.x*ferm_in_2.y + Mferm_in_1.y*ferm_in_2.x);
+
+     aux_l[idx + 6*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_2.x*ferm_in_0.x + Mferm_in_2.y*ferm_in_0.y);
+     aux_l[idx + 6*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_2.x*ferm_in_0.y + Mferm_in_2.y*ferm_in_0.x);
+     aux_l[idx + 7*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_2.x*ferm_in_1.x + Mferm_in_2.y*ferm_in_1.y);
+     aux_l[idx + 7*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_2.x*ferm_in_1.y + Mferm_in_2.y*ferm_in_1.x);
+     aux_l[idx + 8*size_dev + 9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_2.x*ferm_in_2.x + Mferm_in_2.y*ferm_in_2.y);
+     aux_l[idx + 8*size_dev + 9*mu*size_dev].y+=shift_coeff[iter]*(-Mferm_in_2.x*ferm_in_2.y + Mferm_in_2.y*ferm_in_2.x);
+     }
+  }
+
+
+__global__ void FermionProductEvenKernelChem(const float2 *ferm,
+					     const float2 *Mferm,
+					     const int *table,
+					     const int *phases,
+					     int iter,
+					     float2 *aux_l)
+  {
+  int idx = blockIdx.x * blockDim.x + threadIdx.x;   // idx = even <sizeh
+  int mu;
+
+  __shared__ int site_table[NUM_THREADS];
+
+  float2 ferm_in_0, ferm_in_1, ferm_in_2;
+  float2 Mferm_in_0, Mferm_in_1, Mferm_in_2;
+
+
   float2 ferm_aux_0, ferm_aux_1, ferm_aux_2;
-  #endif
+
 
   ferm_in_0=ferm[             idx];
   ferm_in_1=ferm[  size_dev + idx];
@@ -57,11 +140,6 @@ __global__ void FermionProductEvenKernel(const float2 *ferm,
      {
      site_table[threadIdx.x]=table[idx+(4+mu)*size_dev]; // nnp[idx][mu] 
 
-     #ifndef IM_CHEM_POT
-       Mferm_in_0=Mferm[             site_table[threadIdx.x]];
-       Mferm_in_1=Mferm[  size_dev + site_table[threadIdx.x]];
-       Mferm_in_2=Mferm[2*size_dev + site_table[threadIdx.x]];
-     #else
        ferm_aux_0=Mferm[             site_table[threadIdx.x]];
        ferm_aux_1=Mferm[  size_dev + site_table[threadIdx.x]];
        ferm_aux_2=Mferm[2*size_dev + site_table[threadIdx.x]];
@@ -74,7 +152,7 @@ __global__ void FermionProductEvenKernel(const float2 *ferm,
 
        Mferm_in_2.x=ferm_aux_2.x*dev_eim_cos_f-ferm_aux_2.y*dev_eim_sin_f; // Re(ferm_aux_2*e^{imu})
        Mferm_in_2.y=ferm_aux_2.x*dev_eim_sin_f+ferm_aux_2.y*dev_eim_cos_f; // Im(ferm_aux_2*e^{imu})
-     #endif
+
 
      // ris=Mferm^~ferm
      aux_l[idx +              9*mu*size_dev].x+=shift_coeff[iter]*( Mferm_in_0.x*ferm_in_0.x + Mferm_in_0.y*ferm_in_0.y);
@@ -120,9 +198,6 @@ __global__ void FermionProductOddKernel(const float2 *ferm,
   float2 ferm_in_0, ferm_in_1, ferm_in_2;
   float2 Mferm_in_0, Mferm_in_1, Mferm_in_2;
 
-  #ifdef IM_CHEM_POT 
-  float2 ferm_aux_0, ferm_aux_1, ferm_aux_2;
-  #endif
 
   Mferm_in_0=Mferm[             idx];
   Mferm_in_1=Mferm[  size_dev + idx];
@@ -162,11 +237,94 @@ __global__ void FermionProductOddKernel(const float2 *ferm,
      {
      site_table[threadIdx.x]=table[idx +(4+mu)*size_dev]; // nnp[idx][mu] 
 
-     #ifndef IM_CHEM_POT
+
        ferm_in_0=ferm[             site_table[threadIdx.x]];
        ferm_in_1=ferm[  size_dev + site_table[threadIdx.x]];
        ferm_in_2=ferm[2*size_dev + site_table[threadIdx.x]];
-     #else
+
+
+     // ris=ferm^~Mferm
+     aux_l[idx +              9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_0.x*Mferm_in_0.x + ferm_in_0.y*Mferm_in_0.y);
+     aux_l[idx +              9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_0.x*Mferm_in_0.y + ferm_in_0.y*Mferm_in_0.x);
+     aux_l[idx + 1*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_0.x*Mferm_in_1.x + ferm_in_0.y*Mferm_in_1.y);
+     aux_l[idx + 1*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_0.x*Mferm_in_1.y + ferm_in_0.y*Mferm_in_1.x);
+     aux_l[idx + 2*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_0.x*Mferm_in_2.x + ferm_in_0.y*Mferm_in_2.y);
+     aux_l[idx + 2*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_0.x*Mferm_in_2.y + ferm_in_0.y*Mferm_in_2.x);
+
+     aux_l[idx + 3*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_1.x*Mferm_in_0.x + ferm_in_1.y*Mferm_in_0.y);
+     aux_l[idx + 3*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_1.x*Mferm_in_0.y + ferm_in_1.y*Mferm_in_0.x);
+     aux_l[idx + 4*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_1.x*Mferm_in_1.x + ferm_in_1.y*Mferm_in_1.y);
+     aux_l[idx + 4*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_1.x*Mferm_in_1.y + ferm_in_1.y*Mferm_in_1.x);
+     aux_l[idx + 5*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_1.x*Mferm_in_2.x + ferm_in_1.y*Mferm_in_2.y);
+     aux_l[idx + 5*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_1.x*Mferm_in_2.y + ferm_in_1.y*Mferm_in_2.x);
+
+     aux_l[idx + 6*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_2.x*Mferm_in_0.x + ferm_in_2.y*Mferm_in_0.y);
+     aux_l[idx + 6*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_2.x*Mferm_in_0.y + ferm_in_2.y*Mferm_in_0.x);
+     aux_l[idx + 7*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_2.x*Mferm_in_1.x + ferm_in_2.y*Mferm_in_1.y);
+     aux_l[idx + 7*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_2.x*Mferm_in_1.y + ferm_in_2.y*Mferm_in_1.x);
+     aux_l[idx + 8*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_2.x*Mferm_in_2.x + ferm_in_2.y*Mferm_in_2.y);
+     aux_l[idx + 8*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_2.x*Mferm_in_2.y + ferm_in_2.y*Mferm_in_2.x);
+    }
+  }
+
+
+__global__ void FermionProductOddKernelChem(const float2 *ferm,
+					    const float2 *Mferm,
+					    const int *table,
+					    const int *phases,
+					    int iter,
+					    float2 *aux_l)
+{
+  int idx = blockIdx.x * blockDim.x + threadIdx.x+size_dev/2;   // idx = odd >sizeh
+  int mu;
+
+  __shared__ int site_table[NUM_THREADS];
+
+  float2 ferm_in_0, ferm_in_1, ferm_in_2;
+  float2 Mferm_in_0, Mferm_in_1, Mferm_in_2;
+
+
+  float2 ferm_aux_0, ferm_aux_1, ferm_aux_2;
+
+
+  Mferm_in_0=Mferm[             idx];
+  Mferm_in_1=Mferm[  size_dev + idx];
+  Mferm_in_2=Mferm[2*size_dev + idx];
+
+  for(mu=0; mu<3; mu++)
+     {
+     site_table[threadIdx.x]=table[idx +(4+mu)*size_dev]; // nnp[idx][mu] 
+
+     ferm_in_0=ferm[             site_table[threadIdx.x]];
+     ferm_in_1=ferm[  size_dev + site_table[threadIdx.x]];
+     ferm_in_2=ferm[2*size_dev + site_table[threadIdx.x]];
+
+     // ris=ferm^~Mferm
+     aux_l[idx +              9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_0.x*Mferm_in_0.x + ferm_in_0.y*Mferm_in_0.y);
+     aux_l[idx +              9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_0.x*Mferm_in_0.y + ferm_in_0.y*Mferm_in_0.x);
+     aux_l[idx + 1*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_0.x*Mferm_in_1.x + ferm_in_0.y*Mferm_in_1.y);
+     aux_l[idx + 1*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_0.x*Mferm_in_1.y + ferm_in_0.y*Mferm_in_1.x);
+     aux_l[idx + 2*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_0.x*Mferm_in_2.x + ferm_in_0.y*Mferm_in_2.y);
+     aux_l[idx + 2*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_0.x*Mferm_in_2.y + ferm_in_0.y*Mferm_in_2.x);
+
+     aux_l[idx + 3*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_1.x*Mferm_in_0.x + ferm_in_1.y*Mferm_in_0.y);
+     aux_l[idx + 3*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_1.x*Mferm_in_0.y + ferm_in_1.y*Mferm_in_0.x);
+     aux_l[idx + 4*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_1.x*Mferm_in_1.x + ferm_in_1.y*Mferm_in_1.y);
+     aux_l[idx + 4*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_1.x*Mferm_in_1.y + ferm_in_1.y*Mferm_in_1.x);
+     aux_l[idx + 5*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_1.x*Mferm_in_2.x + ferm_in_1.y*Mferm_in_2.y);
+     aux_l[idx + 5*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_1.x*Mferm_in_2.y + ferm_in_1.y*Mferm_in_2.x);
+
+     aux_l[idx + 6*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_2.x*Mferm_in_0.x + ferm_in_2.y*Mferm_in_0.y);
+     aux_l[idx + 6*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_2.x*Mferm_in_0.y + ferm_in_2.y*Mferm_in_0.x);
+     aux_l[idx + 7*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_2.x*Mferm_in_1.x + ferm_in_2.y*Mferm_in_1.y);
+     aux_l[idx + 7*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_2.x*Mferm_in_1.y + ferm_in_2.y*Mferm_in_1.x);
+     aux_l[idx + 8*size_dev + 9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_2.x*Mferm_in_2.x + ferm_in_2.y*Mferm_in_2.y);
+     aux_l[idx + 8*size_dev + 9*mu*size_dev].y-=shift_coeff[iter]*(-ferm_in_2.x*Mferm_in_2.y + ferm_in_2.y*Mferm_in_2.x);
+    }
+  for(mu=3; mu<4; mu++)
+     {
+     site_table[threadIdx.x]=table[idx +(4+mu)*size_dev]; // nnp[idx][mu] 
+
        ferm_aux_0=ferm[             site_table[threadIdx.x]];
        ferm_aux_1=ferm[  size_dev + site_table[threadIdx.x]];
        ferm_aux_2=ferm[2*size_dev + site_table[threadIdx.x]];
@@ -179,7 +337,7 @@ __global__ void FermionProductOddKernel(const float2 *ferm,
 
        ferm_in_2.x=ferm_aux_2.x*dev_eim_cos_f-ferm_aux_2.y*dev_eim_sin_f; // Re(ferm_aux_2*e^{imu})
        ferm_in_2.y=ferm_aux_2.x*dev_eim_sin_f+ferm_aux_2.y*dev_eim_cos_f; // Im(ferm_aux_2*e^{imu})
-     #endif
+
 
      // ris=ferm^~Mferm
      aux_l[idx +              9*mu*size_dev].x-=shift_coeff[iter]*( ferm_in_0.x*Mferm_in_0.x + ferm_in_0.y*Mferm_in_0.y);
@@ -375,14 +533,32 @@ extern "C" void cuda_fermion_force(int num_shifts,
         {
         CuDoe(Mf, smf_device+num_shifts*ps_offset+3*iter*size);
 
-        FermionProductEvenKernel<<<GridDim, BlockDim>>>(smf_device+num_shifts*ps_offset+3*iter*size, 
-                                                  Mf, device_table, device_phases, iter, aux_dev);
-        cudaCheckError(AT,"FermionProductEvenKernel"); 
+	if(!GlobalChemPotPar::Instance().UseChem()){
+	  FermionProductEvenKernel<<<GridDim, BlockDim>>>(smf_device+num_shifts*ps_offset+3*iter*size, 
+							  Mf, device_table, device_phases, iter, aux_dev);
+	  cudaCheckError(AT,"FermionProductEvenKernel"); 
+	} else {
+	  FermionProductEvenKernelChem<<<GridDim, BlockDim>>>(smf_device+num_shifts*ps_offset+3*iter*size, 
+							      Mf, device_table, device_phases, iter, aux_dev);
+	  cudaCheckError(AT,"FermionProductEvenKernelChem"); 
+	}
+	
 
-        FermionProductOddKernel<<<GridDim, BlockDim>>>(smf_device+num_shifts*ps_offset+3*iter*size, 
-                                                  Mf, device_table, device_phases, iter, aux_dev);
-        cudaCheckError(AT,"FermionProductOddKernel"); 
-        }
+	if(!GlobalChemPotPar::Instance().UseChem()){
+	  FermionProductOddKernel<<<GridDim, BlockDim>>>(smf_device+num_shifts*ps_offset+3*iter*size, 
+							 Mf, device_table, device_phases, iter, aux_dev);
+	  cudaCheckError(AT,"FermionProductOddKernel"); 
+	} else {
+	  FermionProductOddKernelChem<<<GridDim, BlockDim>>>(smf_device+num_shifts*ps_offset+3*iter*size, 
+							     Mf, device_table, device_phases, iter, aux_dev);
+	  cudaCheckError(AT,"FermionProductOddKernelChem"); 
+	  
+	}
+
+
+
+
+        } 
      }
 
   dim3 BlockDimBis(NUM_THREADS);

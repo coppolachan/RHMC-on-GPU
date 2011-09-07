@@ -1,21 +1,27 @@
-    // singleton.h
-    #ifndef __SINGLETON_H
-    #define __SINGLETON_H
+/*
+  singleton.h
+  
+  Singleton class
+  to add singleton properties to class T
+*/
 
-    template <class T>
-    class Singleton
-    {
-    public:
-      static T& Instance() {
-        static T _instance;
-        return _instance;
-      }
-    private:
-      Singleton();          // ctor hidden
-      ~Singleton();          // dtor hidden
-      Singleton(Singleton const&);    // copy ctor hidden
-      Singleton& operator=(Singleton const&);  // assign op hidden
-    };
+#ifndef SINGLETON_H_
+#define SINGLETON_H_
 
-    #endif
-    // eof
+template <class T>
+class Singleton
+{
+ public:
+  static T& Instance() {
+    static T _instance;
+    return _instance;
+  }
+ private:
+  Singleton();       // constructor hidden
+  ~Singleton();      // destructor hidden
+  Singleton(Singleton const&);    // copy constructor hidden
+  Singleton& operator=(Singleton const&);  // assign operator hidden
+};
+
+#endif //SINGLETON_H_
+

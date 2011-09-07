@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 #include "lib/Tools/Packer/packer.h"
 #include "lib/Update/momenta.h"
 
@@ -275,18 +276,19 @@ void smartunpack_fermion_d(Fermion *out, const float in[6*sizeh*2])
 
 
 // 6*sizeh*no_ps*2=6*sizeh(fermion)*no_ps*2(1double~2float)
-void smartpack_multifermion(float out[6*sizeh*no_ps*2] , const MultiFermion *in)
+void smartpack_multifermion(float *out , const MultiFermion *in)
  {
  #ifdef DEBUG_MODE
  cout << "DEBUG: inside smartpack_multifermion ..."<<endl;
  #endif
 
+
  long int i;
- long int offs = 6*sizeh*no_ps;
+ long int offs = 6*sizeh*GlobalParams::Instance().getNumPS();
  double aux;
  int ps;
 
- for(ps=0; ps<no_ps; ps++)
+ for(ps=0; ps<GlobalParams::Instance().getNumPS(); ps++)
     {
     for(i=0; i<sizeh; i++)
        {
@@ -320,21 +322,21 @@ void smartpack_multifermion(float out[6*sizeh*no_ps*2] , const MultiFermion *in)
 
 
 
-void smartunpack_multifermion(MultiFermion *out, const float in[6*sizeh*no_ps*2])
+void smartunpack_multifermion(MultiFermion *out, const float *in)
  {
  #ifdef DEBUG_MODE
  cout << "DEBUG: inside smartunpak_multifermion ..."<<endl;
  #endif
 
  long int i;
- long int offs = 6*sizeh*no_ps;
+ long int offs = 6*sizeh*GlobalParams::Instance().getNumPS();
  int ps;
  
  double d_re, d_im; 
  complex<REAL> aux[3]; 
 
 
- for(ps=0; ps<no_ps; ps++)
+ for(ps=0; ps<GlobalParams::Instance().getNumPS(); ps++)
     {
     for(i=0; i<sizeh; i++)
        {
@@ -368,17 +370,17 @@ void smartunpack_multifermion(MultiFermion *out, const float in[6*sizeh*no_ps*2]
 
 // ShiftMultiFermion unpacker
 // 6*sizeh*max_approx_order*no_ps*2 = 6*sizeh(fermion)*max_approx_order*no_ps*2(1double~2float)
-void smartunpack_multishiftfermion(ShiftMultiFermion *out, const float in[6*sizeh*max_approx_order*no_ps*2],  int order)
+void smartunpack_multishiftfermion(ShiftMultiFermion *out, const float *in,  int order)
  {
  #ifdef DEBUG_MODE
  cout << "DEBUG: inside smartunpack_multishiftfermion ..."<<endl;
  #endif
 
  long int i, shift, ps;
- long int offs = 3*size*order*no_ps;
+ long int offs = 3*size*order*GlobalParams::Instance().getNumPS();
  double tempR, tempI;
 
- for(ps=0; ps<no_ps; ps++)
+ for(ps=0; ps<GlobalParams::Instance().getNumPS(); ps++)
     {
     for(shift=0; shift<order; shift++)
        {

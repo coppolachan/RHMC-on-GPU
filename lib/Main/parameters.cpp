@@ -1,10 +1,8 @@
 #include <iostream>
 #include <string>
-#include "include/parameters.h"
 #include <cstdlib>
+#include "include/parameters.h"
 #include "lib/Tools/InputParser/InputParser.h"
-
-
 
 void Params::setParams(InputParser &Input) {
   Input.ParseFile();
@@ -68,41 +66,48 @@ void Params::setParams(InputParser &Input) {
 void Params::listParams() {
   //List all parameters on screen
 
-  std::cout << "NumFlavors    : "<< no_flavors << std::endl;
-  std::cout << "Beta          : "<< beta << std::endl;
-  std::cout << "Mass          : "<< mass << std::endl;
-  std::cout << "Random Seed   : "<< rand_seed << std::endl;
+  std::cout << "\n::::::   List of Global Simulation Parameters   ::::::\n" << std::endl;
+  std::cout << "==========================================================\n";
+
+  std::cout << "NumFlavors       : "<< no_flavors << std::endl;
+  std::cout << "Beta             : "<< beta << std::endl;
+  std::cout << "Mass             : "<< mass << std::endl;
+  std::cout << "==========================================================\n";
   if(ferm_temp_bc) {
-    std::cout << "Fermionic Temporal BC   : PERIODIC" << std::endl;
+    std::cout << "Fermionic Temporal BC           : PERIODIC" << std::endl;
   }
   else {
-    std::cout << "Fermionic Temporal BC   : ANTI-PERIODIC" << std::endl;
+    std::cout << "Fermionic Temporal BC           : ANTI-PERIODIC" << std::endl;
   }
-  std::cout << "Starting State   : "<< starting_state << std::endl;
-  std::cout << "Run updates                 : "<< run_update_iterations << std::endl;
-  std::cout << "Thermalization updates      : "<< therm_updates << std::endl;
-  std::cout << "Save interval (#conf)       : "<< save_interval << std::endl;
-  std::cout << "Measure interval (#conf)    : "<< meas_interval << std::endl;
+  std::cout << "Random Seed                     : "<< rand_seed << std::endl;
+  std::cout << "Starting State                  : "<< starting_state << std::endl;
+  std::cout << "Run updates                     : "<< run_update_iterations << std::endl;
+  std::cout << "Thermalization updates          : "<< therm_updates << std::endl;
+  std::cout << "Save interval (#conf)           : "<< save_interval << std::endl;
+  std::cout << "Measure interval (#conf)        : "<< meas_interval << std::endl;
 
-  std::cout << "Number of MD steps          : "<< no_md << std::endl;
-  std::cout << "UseMultistep                : "<< use_multistep << std::endl;
-  std::cout << "Gauge Time Scale            : "<< gauge_scale << std::endl;  
-  std::cout << "Number of random vectors for measurements    : "<< rand_vect << std::endl; 
+  std::cout << "Number of MD steps per trj      : "<< no_md << std::endl;
+  std::cout << "UseMultistep                    : "<< use_multistep << std::endl;
+  std::cout << "Gauge Time Scale                : "<< gauge_scale << std::endl;  
 
-  std::cout << "Max CG iterations           : "<< max_cg << std::endl;
-  //std::cout << "Number of pseudofermions    : "<< no_ps << std::endl;
-  std::cout << "GMP Remez precision goal    : "<< gmp_remez_precision << std::endl;
-  std::cout << "InverseSingleDblePrec       : "<< inv_single_double_prec << std::endl; 
+  std::cout << "Max CG iterations               : "<< max_cg << std::endl;
+  //std::cout << "Number of pseudofermions        : "<< no_ps << std::endl;
+  std::cout << "GMP Remez precision goal        : "<< gmp_remez_precision << std::endl;
+  std::cout << "Double prec inverter if residue < "<< inv_single_double_prec << std::endl; 
 
   //  std::cout << "Number of polynomials(Metro): "<< approx_metro << std::endl;
-  std::cout << "Lambda minimum (Metropolis) : "<< lambda_min_metro << std::endl;
-  std::cout << "Residue (Metropolis)        : "<< residue_metro << std::endl;
+  std::cout << "Lambda minimum (Metropolis)     : "<< lambda_min_metro << std::endl;
+  std::cout << "CG Residue (Metropolis)         : "<< residue_metro << std::endl;
 
   //  std::cout << "Number of polynomials(MD): "<< approx_md << std::endl;
-  std::cout << "Lambda minimum (MolDyn) : "<< lambda_min_md << std::endl;
-  std::cout << "Residue (MolDyn)        : "<< residue_md << std::endl;
-
-  std::cout << ":::::: GPU Device       : "<< gpu_device_to_use << std::endl;
+  std::cout << "Lambda minimum (MolDyn)         : "<< lambda_min_md << std::endl;
+  std::cout << "CG Residue (MolDyn)             : "<< residue_md << std::endl;
+  std::cout << "# of rnd vec for chiral meas    : "<< rand_vect << std::endl; 
+#ifdef USE_GPU
+  std::cout << "\n==========================================================";
+  std::cout << "\n----> GPU Device ID             : "<< gpu_device_to_use << std::endl;
+  std::cout << "==========================================================\n";
+#endif
 }
 
 
@@ -117,12 +122,8 @@ void ChemPotParams::setParams(InputParser &Input){
     exit(1);
   }
 
-  //if (use_chem_potential.compare("USE_CHEMPOT"))
-  //temporary workaround to use just the global define in global_macro.h
-#ifdef IM_CHEM_POT
-  UseState = true;
-#endif
-  //end of workaround.
+  if (use_chem_potential.compare("USE_CHEMPOT"))
+    UseState = true;
 
   Input.get("ImMu",immu);
 
@@ -132,6 +133,6 @@ void ChemPotParams::setParams(InputParser &Input){
 }
 void ChemPotParams::listParams() {
   //Commented because it is now yet available to use
-  //  std::cout << "Use chemical potential       : "<< use_chem_potential << std::endl;  
-  std::cout << "Imaginary chemical potential : "<< immu << std::endl;
+  std::cout << "Use chemical potential          : "<< use_chem_potential << std::endl;  
+  std::cout << "Imaginary chemical potential    : "<< immu << std::endl;
 }

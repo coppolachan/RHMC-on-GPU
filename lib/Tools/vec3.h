@@ -4,7 +4,7 @@
 #include <complex>
 #include "include/global_const.h"
 
-// Not very good practice
+// Not very good practice classes are too coupled together
 class Su3;
 class Fermion;
 class MultiFermion;
@@ -57,8 +57,9 @@ public:
  // defined in Packer/packer.cc
  friend void smartpack_fermion(float out[6*sizeh], const Fermion *in);
  friend void smartpack_fermion_d(float out[6*sizeh*2], const Fermion *in);
- friend void smartpack_multifermion(float out[6*sizeh*no_ps*2] , const MultiFermion *in);
- friend void smartunpack_multishiftfermion(ShiftMultiFermion *out, const float in[6*sizeh*max_approx_order*no_ps*2],  int order);
+ friend void smartpack_multifermion(float *out , const MultiFermion *in);
+ friend void smartunpack_multishiftfermion(ShiftMultiFermion *out, const float *in,  int order);
+
  };
 
 

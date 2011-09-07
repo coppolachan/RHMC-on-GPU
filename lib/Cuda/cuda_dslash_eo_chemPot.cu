@@ -1,10 +1,10 @@
 // SINGLE PRECISION KERNELS FOR ODD/EVEN FERMIONS
 
-__global__ void DslashKernelEO(float2  *out,
-                               int *tables, 
-                               int *phases, 
-                               size_t gauge_offset,
-                               size_t ferm_offset) 
+__global__ void DslashKernelEOChem(float2  *out,
+				   int *tables, 
+				   int *phases, 
+				   size_t gauge_offset,
+				   size_t ferm_offset) 
   {
   int idx = blockIdx.x * blockDim.x + threadIdx.x + size_dev_h;  // idx>sizeh, ODD
   int stag_phase = 1;
@@ -20,6 +20,7 @@ __global__ void DslashKernelEO(float2  *out,
 
   float2 ferm_in_0, ferm_in_1, ferm_in_2;
 
+   float2 ferm_aux_0, ferm_aux_1, ferm_aux_2;
  
   // Direction 0
   site_table[threadIdx.x]  = tables[idx+4*size_dev];
@@ -124,26 +125,36 @@ __global__ void DslashKernelEO(float2  *out,
 
   LoadLinkRegs(gauge_texRef, size_dev, idx + gauge_offset, 3);
 
-  ferm_out[0][0][threadIdx.x] += link0.x*ferm_in_0.x-link0.y*ferm_in_0.y+  
-                                 link0.z*ferm_in_1.x-link0.w*ferm_in_1.y+ 
-                                 link1.x*ferm_in_2.x-link1.y*ferm_in_2.y; 
-  ferm_out[0][1][threadIdx.x] += link0.x*ferm_in_0.y+link0.y*ferm_in_0.x+ 
-                                 link0.z*ferm_in_1.y+link0.w*ferm_in_1.x+ 
-                                 link1.x*ferm_in_2.y+link1.y*ferm_in_2.x; 
+  ferm_aux_0.x = link0.x*ferm_in_0.x-link0.y*ferm_in_0.y+  
+                 link0.z*ferm_in_1.x-link0.w*ferm_in_1.y+ 
+                 link1.x*ferm_in_2.x-link1.y*ferm_in_2.y; 
+  ferm_aux_0.y = link0.x*ferm_in_0.y+link0.y*ferm_in_0.x+ 
+                 link0.z*ferm_in_1.y+link0.w*ferm_in_1.x+ 
+                 link1.x*ferm_in_2.y+link1.y*ferm_in_2.x; 
 
-  ferm_out[1][0][threadIdx.x] += link1.z*ferm_in_0.x-link1.w*ferm_in_0.y+  
-                                 link2.x*ferm_in_1.x-link2.y*ferm_in_1.y+ 
-                                 link2.z*ferm_in_2.x-link2.w*ferm_in_2.y; 
-  ferm_out[1][1][threadIdx.x] += link1.z*ferm_in_0.y+link1.w*ferm_in_0.x+ 
-                                 link2.x*ferm_in_1.y+link2.y*ferm_in_1.x+ 
-                                 link2.z*ferm_in_2.y+link2.w*ferm_in_2.x; 
+  ferm_aux_1.x = link1.z*ferm_in_0.x-link1.w*ferm_in_0.y+  
+                 link2.x*ferm_in_1.x-link2.y*ferm_in_1.y+ 
+                 link2.z*ferm_in_2.x-link2.w*ferm_in_2.y; 
+  ferm_aux_1.y = link1.z*ferm_in_0.y+link1.w*ferm_in_0.x+ 
+                 link2.x*ferm_in_1.y+link2.y*ferm_in_1.x+ 
+                 link2.z*ferm_in_2.y+link2.w*ferm_in_2.x; 
 
-  ferm_out[2][0][threadIdx.x] += stag_phase*(C1RE*ferm_in_0.x-C1IM*ferm_in_0.y+  
-					     C2RE*ferm_in_1.x-C2IM*ferm_in_1.y+ 
-					     C3RE*ferm_in_2.x-C3IM*ferm_in_2.y); 
-  ferm_out[2][1][threadIdx.x] += stag_phase*(C1RE*ferm_in_0.y+C1IM*ferm_in_0.x+ 
-					     C2RE*ferm_in_1.y+C2IM*ferm_in_1.x+ 
-					     C3RE*ferm_in_2.y+C3IM*ferm_in_2.x); 
+  ferm_aux_2.x = stag_phase*(C1RE*ferm_in_0.x-C1IM*ferm_in_0.y+  
+	         C2RE*ferm_in_1.x-C2IM*ferm_in_1.y+ 
+	         C3RE*ferm_in_2.x-C3IM*ferm_in_2.y); 
+  ferm_aux_2.y = stag_phase*(C1RE*ferm_in_0.y+C1IM*ferm_in_0.x+ 
+	         C2RE*ferm_in_1.y+C2IM*ferm_in_1.x+ 
+	         C3RE*ferm_in_2.y+C3IM*ferm_in_2.x); 
+
+  ferm_out[0][0][threadIdx.x] += ferm_aux_0.x*dev_eim_cos_f - ferm_aux_0.y*dev_eim_sin_f;  // Re[e^{imu}*ferm_aux_0]
+  ferm_out[0][1][threadIdx.x] += ferm_aux_0.x*dev_eim_sin_f + ferm_aux_0.y*dev_eim_cos_f;  // Im[e^{imu}*ferm_aux_0]
+
+  ferm_out[1][0][threadIdx.x] += ferm_aux_1.x*dev_eim_cos_f - ferm_aux_1.y*dev_eim_sin_f;  // Re[e^{imu}*ferm_aux_1]
+  ferm_out[1][1][threadIdx.x] += ferm_aux_1.x*dev_eim_sin_f + ferm_aux_1.y*dev_eim_cos_f;  // Im[e^{imu}*ferm_aux_1]
+
+  ferm_out[2][0][threadIdx.x] += ferm_aux_2.x*dev_eim_cos_f - ferm_aux_2.y*dev_eim_sin_f;  // Re[e^{imu}*ferm_aux_2]
+  ferm_out[2][1][threadIdx.x] += ferm_aux_2.x*dev_eim_sin_f + ferm_aux_2.y*dev_eim_cos_f;  // Im[e^{imu}*ferm_aux_2]
+
   
   //---------------------------------------------------end of first block
  
@@ -259,29 +270,39 @@ __global__ void DslashKernelEO(float2  *out,
 
   LoadLinkRegs(gauge_texRef, size_dev, site_table[threadIdx.x] + gauge_offset, 3);
 
-  ferm_out[0][0][threadIdx.x] -= link0.x*ferm_in_0.x+link0.y*ferm_in_0.y +
-                                 link1.z*ferm_in_1.x+link1.w*ferm_in_1.y +
-                                 stag_phase*(C1RE*ferm_in_2.x+  C1IM*ferm_in_2.y); 
+  ferm_aux_0.x = link0.x*ferm_in_0.x+link0.y*ferm_in_0.y +
+                 link1.z*ferm_in_1.x+link1.w*ferm_in_1.y +
+                 stag_phase*(C1RE*ferm_in_2.x+  C1IM*ferm_in_2.y); 
 
-  ferm_out[0][1][threadIdx.x] -= link0.x*ferm_in_0.y-link0.y*ferm_in_0.x +
-                                 link1.z*ferm_in_1.y-link1.w*ferm_in_1.x +
-                                 stag_phase*(C1RE*ferm_in_2.y- C1IM*ferm_in_2.x); 
+  ferm_aux_0.y = link0.x*ferm_in_0.y-link0.y*ferm_in_0.x +
+                 link1.z*ferm_in_1.y-link1.w*ferm_in_1.x +
+                 stag_phase*(C1RE*ferm_in_2.y- C1IM*ferm_in_2.x); 
 
-  ferm_out[1][0][threadIdx.x] -= link0.z*ferm_in_0.x+link0.w*ferm_in_0.y +
-                                 link2.x*ferm_in_1.x+link2.y*ferm_in_1.y +
-                                 stag_phase*(C2RE*ferm_in_2.x+ C2IM*ferm_in_2.y); 
+  ferm_aux_1.x = link0.z*ferm_in_0.x+link0.w*ferm_in_0.y +
+                 link2.x*ferm_in_1.x+link2.y*ferm_in_1.y +
+                 stag_phase*(C2RE*ferm_in_2.x+ C2IM*ferm_in_2.y); 
 
-  ferm_out[1][1][threadIdx.x] -= link0.z*ferm_in_0.y-link0.w*ferm_in_0.x +
-                                 link2.x*ferm_in_1.y-link2.y*ferm_in_1.x +
-                                 stag_phase*(C2RE*ferm_in_2.y- C2IM*ferm_in_2.x); 
+  ferm_aux_1.y = link0.z*ferm_in_0.y-link0.w*ferm_in_0.x +
+                 link2.x*ferm_in_1.y-link2.y*ferm_in_1.x +
+                 stag_phase*(C2RE*ferm_in_2.y- C2IM*ferm_in_2.x); 
 
-  ferm_out[2][0][threadIdx.x] -= link1.x*ferm_in_0.x+link1.y*ferm_in_0.y +
-                                 link2.z*ferm_in_1.x+link2.w*ferm_in_1.y +
-                                 stag_phase*(C3RE*ferm_in_2.x+ C3IM*ferm_in_2.y); 
+  ferm_aux_2.x = link1.x*ferm_in_0.x+link1.y*ferm_in_0.y +
+                 link2.z*ferm_in_1.x+link2.w*ferm_in_1.y +
+                 stag_phase*(C3RE*ferm_in_2.x+ C3IM*ferm_in_2.y); 
 
-  ferm_out[2][1][threadIdx.x] -= link1.x*ferm_in_0.y-link1.y*ferm_in_0.x +
-                                 link2.z*ferm_in_1.y-link2.w*ferm_in_1.x +
-                                 stag_phase*(C3RE*ferm_in_2.y- C3IM*ferm_in_2.x); 
+  ferm_aux_2.y = link1.x*ferm_in_0.y-link1.y*ferm_in_0.x +
+                 link2.z*ferm_in_1.y-link2.w*ferm_in_1.x +
+                 stag_phase*(C3RE*ferm_in_2.y- C3IM*ferm_in_2.x); 
+
+  ferm_out[0][0][threadIdx.x] -=  ferm_aux_0.x*dev_eim_cos_f + ferm_aux_0.y*dev_eim_sin_f;  // Re[e^{-imu}*ferm_aux_0]
+  ferm_out[0][1][threadIdx.x] -= -ferm_aux_0.x*dev_eim_sin_f + ferm_aux_0.y*dev_eim_cos_f;  // Im[e^{-imu}*ferm_aux_0]
+
+  ferm_out[1][0][threadIdx.x] -=  ferm_aux_1.x*dev_eim_cos_f + ferm_aux_1.y*dev_eim_sin_f;  // Re[e^{-imu}*ferm_aux_1]
+  ferm_out[1][1][threadIdx.x] -= -ferm_aux_1.x*dev_eim_sin_f + ferm_aux_1.y*dev_eim_cos_f;  // Im[e^{-imu}*ferm_aux_1]
+
+  ferm_out[2][0][threadIdx.x] -=  ferm_aux_2.x*dev_eim_cos_f + ferm_aux_2.y*dev_eim_sin_f;  // Re[e^{-imu}*ferm_aux_2]
+  ferm_out[2][1][threadIdx.x] -= -ferm_aux_2.x*dev_eim_sin_f + ferm_aux_2.y*dev_eim_cos_f;  // Im[e^{-imu}*ferm_aux_2]
+
 
   //-------------------------------------------------end of second block
  
@@ -315,11 +336,11 @@ __global__ void DslashKernelEO(float2  *out,
 
 
 
-__global__ void DslashDaggerKernelEO(float2 *out,
-                                     int *tables, 
-                                     int *phases,
-                                     size_t gauge_offset,
-                                     size_t ferm_offset) 
+__global__ void DslashDaggerKernelEOChem(float2 *out,
+					 int *tables, 
+					 int *phases,
+					 size_t gauge_offset,
+					 size_t ferm_offset) 
   { 
   int idx = blockIdx.x*blockDim.x + threadIdx.x;     // idx< sizeh, EVEN!!
   int stag_phase = 1;
@@ -334,6 +355,9 @@ __global__ void DslashDaggerKernelEO(float2 *out,
   DeclareMatrixRegs;           //12 registers
 
   float2 ferm_in_0, ferm_in_1, ferm_in_2;
+ 
+   float2 ferm_aux_0, ferm_aux_1, ferm_aux_2;
+
  
   // Direction 0
   site_table[threadIdx.x] = tables[idx+4*size_dev];
@@ -437,26 +461,37 @@ __global__ void DslashDaggerKernelEO(float2 *out,
 
   LoadLinkRegs(gauge_texRef, size_dev, idx + gauge_offset, 3);
 
-  ferm_out[0][0][threadIdx.x] += link0.x*ferm_in_0.x-link0.y*ferm_in_0.y+  
-                                 link0.z*ferm_in_1.x-link0.w*ferm_in_1.y+ 
-                                 link1.x*ferm_in_2.x-link1.y*ferm_in_2.y; 
-  ferm_out[0][1][threadIdx.x] += link0.x*ferm_in_0.y+link0.y*ferm_in_0.x+ 
-                                 link0.z*ferm_in_1.y+link0.w*ferm_in_1.x+ 
-                                 link1.x*ferm_in_2.y+link1.y*ferm_in_2.x; 
+  ferm_aux_0.x = link0.x*ferm_in_0.x-link0.y*ferm_in_0.y+  
+                 link0.z*ferm_in_1.x-link0.w*ferm_in_1.y+ 
+                 link1.x*ferm_in_2.x-link1.y*ferm_in_2.y; 
+  ferm_aux_0.y = link0.x*ferm_in_0.y+link0.y*ferm_in_0.x+ 
+                 link0.z*ferm_in_1.y+link0.w*ferm_in_1.x+ 
+                 link1.x*ferm_in_2.y+link1.y*ferm_in_2.x; 
 
-  ferm_out[1][0][threadIdx.x] += link1.z*ferm_in_0.x-link1.w*ferm_in_0.y+  
-                                 link2.x*ferm_in_1.x-link2.y*ferm_in_1.y+ 
-                                 link2.z*ferm_in_2.x-link2.w*ferm_in_2.y; 
-  ferm_out[1][1][threadIdx.x] += link1.z*ferm_in_0.y+link1.w*ferm_in_0.x+ 
-                                 link2.x*ferm_in_1.y+link2.y*ferm_in_1.x+ 
-                                 link2.z*ferm_in_2.y+link2.w*ferm_in_2.x; 
+  ferm_aux_1.x = link1.z*ferm_in_0.x-link1.w*ferm_in_0.y+  
+                 link2.x*ferm_in_1.x-link2.y*ferm_in_1.y+ 
+                 link2.z*ferm_in_2.x-link2.w*ferm_in_2.y; 
+  ferm_aux_1.y = link1.z*ferm_in_0.y+link1.w*ferm_in_0.x+ 
+                 link2.x*ferm_in_1.y+link2.y*ferm_in_1.x+ 
+                 link2.z*ferm_in_2.y+link2.w*ferm_in_2.x; 
 
-  ferm_out[2][0][threadIdx.x] += stag_phase*(C1RE*ferm_in_0.x-C1IM*ferm_in_0.y+  
-					     C2RE*ferm_in_1.x-C2IM*ferm_in_1.y+ 
-					     C3RE*ferm_in_2.x-C3IM*ferm_in_2.y); 
-  ferm_out[2][1][threadIdx.x] += stag_phase*(C1RE*ferm_in_0.y+C1IM*ferm_in_0.x+ 
-					     C2RE*ferm_in_1.y+C2IM*ferm_in_1.x+ 
-					     C3RE*ferm_in_2.y+C3IM*ferm_in_2.x); 
+  ferm_aux_2.x = stag_phase*(C1RE*ferm_in_0.x-C1IM*ferm_in_0.y+  
+	                     C2RE*ferm_in_1.x-C2IM*ferm_in_1.y+ 
+			     C3RE*ferm_in_2.x-C3IM*ferm_in_2.y); 
+  ferm_aux_2.y = stag_phase*(C1RE*ferm_in_0.y+C1IM*ferm_in_0.x+ 
+			     C2RE*ferm_in_1.y+C2IM*ferm_in_1.x+ 
+			     C3RE*ferm_in_2.y+C3IM*ferm_in_2.x); 
+
+  ferm_out[0][0][threadIdx.x] += ferm_aux_0.x*dev_eim_cos_f - ferm_aux_0.y*dev_eim_sin_f;  // Re[e^{imu}*ferm_aux_0]
+  ferm_out[0][1][threadIdx.x] += ferm_aux_0.x*dev_eim_sin_f + ferm_aux_0.y*dev_eim_cos_f;  // Im[e^{imu}*ferm_aux_0]
+
+  ferm_out[1][0][threadIdx.x] += ferm_aux_1.x*dev_eim_cos_f - ferm_aux_1.y*dev_eim_sin_f;  // Re[e^{imu}*ferm_aux_1]
+  ferm_out[1][1][threadIdx.x] += ferm_aux_1.x*dev_eim_sin_f + ferm_aux_1.y*dev_eim_cos_f;  // Im[e^{imu}*ferm_aux_1]
+
+  ferm_out[2][0][threadIdx.x] += ferm_aux_2.x*dev_eim_cos_f - ferm_aux_2.y*dev_eim_sin_f;  // Re[e^{imu}*ferm_aux_2]
+  ferm_out[2][1][threadIdx.x] += ferm_aux_2.x*dev_eim_sin_f + ferm_aux_2.y*dev_eim_cos_f;  // Im[e^{imu}*ferm_aux_2]
+
+
   
   //---------------------------------------------------end of first block
  
@@ -573,29 +608,38 @@ __global__ void DslashDaggerKernelEO(float2 *out,
 
   LoadLinkRegs(gauge_texRef, size_dev, site_table[threadIdx.x] + gauge_offset, 3);
 
-  ferm_out[0][0][threadIdx.x] -= link0.x*ferm_in_0.x+link0.y*ferm_in_0.y +
-                                 link1.z*ferm_in_1.x+link1.w*ferm_in_1.y +
-                                 stag_phase*(C1RE*ferm_in_2.x+  C1IM*ferm_in_2.y); 
+  ferm_aux_0.x = link0.x*ferm_in_0.x+link0.y*ferm_in_0.y +
+                 link1.z*ferm_in_1.x+link1.w*ferm_in_1.y +
+                 stag_phase*(C1RE*ferm_in_2.x+  C1IM*ferm_in_2.y); 
 
-  ferm_out[0][1][threadIdx.x] -= link0.x*ferm_in_0.y-link0.y*ferm_in_0.x +
-                                 link1.z*ferm_in_1.y-link1.w*ferm_in_1.x +
-                                 stag_phase*(C1RE*ferm_in_2.y- C1IM*ferm_in_2.x); 
+  ferm_aux_0.y = link0.x*ferm_in_0.y-link0.y*ferm_in_0.x +
+                 link1.z*ferm_in_1.y-link1.w*ferm_in_1.x +
+                 stag_phase*(C1RE*ferm_in_2.y- C1IM*ferm_in_2.x); 
 
-  ferm_out[1][0][threadIdx.x] -= link0.z*ferm_in_0.x+link0.w*ferm_in_0.y +
-                                 link2.x*ferm_in_1.x+link2.y*ferm_in_1.y +
-                                 stag_phase*(C2RE*ferm_in_2.x+ C2IM*ferm_in_2.y); 
+  ferm_aux_1.x = link0.z*ferm_in_0.x+link0.w*ferm_in_0.y +
+                 link2.x*ferm_in_1.x+link2.y*ferm_in_1.y +
+                 stag_phase*(C2RE*ferm_in_2.x+ C2IM*ferm_in_2.y); 
 
-  ferm_out[1][1][threadIdx.x] -= link0.z*ferm_in_0.y-link0.w*ferm_in_0.x +
-                                 link2.x*ferm_in_1.y-link2.y*ferm_in_1.x +
-                                 stag_phase*(C2RE*ferm_in_2.y- C2IM*ferm_in_2.x); 
+  ferm_aux_1.y = link0.z*ferm_in_0.y-link0.w*ferm_in_0.x +
+                 link2.x*ferm_in_1.y-link2.y*ferm_in_1.x +
+                 stag_phase*(C2RE*ferm_in_2.y- C2IM*ferm_in_2.x); 
 
-  ferm_out[2][0][threadIdx.x] -= link1.x*ferm_in_0.x+link1.y*ferm_in_0.y +
-                                 link2.z*ferm_in_1.x+link2.w*ferm_in_1.y +
-                                 stag_phase*(C3RE*ferm_in_2.x+ C3IM*ferm_in_2.y); 
+  ferm_aux_2.x = link1.x*ferm_in_0.x+link1.y*ferm_in_0.y +
+                 link2.z*ferm_in_1.x+link2.w*ferm_in_1.y +
+                 stag_phase*(C3RE*ferm_in_2.x+ C3IM*ferm_in_2.y); 
 
-  ferm_out[2][1][threadIdx.x] -= link1.x*ferm_in_0.y-link1.y*ferm_in_0.x +
-                                 link2.z*ferm_in_1.y-link2.w*ferm_in_1.x +
-                                 stag_phase*(C3RE*ferm_in_2.y- C3IM*ferm_in_2.x); 
+  ferm_aux_2.y = link1.x*ferm_in_0.y-link1.y*ferm_in_0.x +
+                 link2.z*ferm_in_1.y-link2.w*ferm_in_1.x +
+                 stag_phase*(C3RE*ferm_in_2.y- C3IM*ferm_in_2.x); 
+
+  ferm_out[0][0][threadIdx.x] -=  ferm_aux_0.x*dev_eim_cos_f + ferm_aux_0.y*dev_eim_sin_f;  // Re[e^{-imu}*ferm_aux_0]
+  ferm_out[0][1][threadIdx.x] -= -ferm_aux_0.x*dev_eim_sin_f + ferm_aux_0.y*dev_eim_cos_f;  // Im[e^{-imu}*ferm_aux_0]
+
+  ferm_out[1][0][threadIdx.x] -=  ferm_aux_1.x*dev_eim_cos_f + ferm_aux_1.y*dev_eim_sin_f;  // Re[e^{-imu}*ferm_aux_1]
+  ferm_out[1][1][threadIdx.x] -= -ferm_aux_1.x*dev_eim_sin_f + ferm_aux_1.y*dev_eim_cos_f;  // Im[e^{-imu}*ferm_aux_1]
+
+  ferm_out[2][0][threadIdx.x] -=  ferm_aux_2.x*dev_eim_cos_f + ferm_aux_2.y*dev_eim_sin_f;  // Re[e^{-imu}*ferm_aux_2]
+  ferm_out[2][1][threadIdx.x] -= -ferm_aux_2.x*dev_eim_sin_f + ferm_aux_2.y*dev_eim_cos_f;  // Im[e^{-imu}*ferm_aux_2]
 
   //-------------------------------------------------end of second block
 
@@ -623,71 +667,6 @@ __global__ void DslashDaggerKernelEO(float2 *out,
   }
 
 
-
-
-#include "cuda_dslash_eo_chemPot.cu"
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////// END OF KERNELS
-
-
-
-
-
-void DslashOperatorEO(float2 *out, 
-		      float2 *in, 
-		      const int isign)
-  {
-  #ifdef DEBUG_MODE_2
-  printf("\033[32mDEBUG: inside DslashOperatorEO ...\033[0m\n");
-  #endif
-
-  dim3 BlockDimension(NUM_THREADS);
-  dim3 GridDimension(sizeh/BlockDimension.x); // Only even sites!
-
-  size_t vector_size=3*size*sizeof(float2);
-  size_t gauge_field_size = sizeof(float4)*size*12;  
-
-  size_t offset_g, offset_f;
-  cudaSafe(AT,cudaBindTexture(&offset_f, fermion_texRef, in, vector_size), "cudaBindTexture");
-  offset_f/=sizeof(float2);
-
-  cudaSafe(AT,cudaBindTexture(&offset_g, gauge_texRef, gauge_field_device, gauge_field_size), "cudaBindTexture");  
-  offset_g/=sizeof(float4);
-
-  if(isign == PLUS) 
-    {
-      if(!GlobalChemPotPar::Instance().UseChem()) {
-	DslashKernelEO<<<GridDimension,BlockDimension>>>(out, device_table, device_phases, offset_g, offset_f); 
-	cudaCheckError(AT,"DslashKernelEO"); 
-      } else {
-	DslashKernelEOChem<<<GridDimension,BlockDimension>>>(out, device_table, device_phases, offset_g, offset_f); 
-	cudaCheckError(AT,"DslashKernelEOChem"); 	
-      }	
-    }
-  
-  if(isign == MINUS) 
-    {
-      if(!GlobalChemPotPar::Instance().UseChem()) {
-	DslashDaggerKernelEO<<<GridDimension,BlockDimension>>>(out, device_table, device_phases, offset_g, offset_f);
-	cudaCheckError(AT,"DslashDaggerKernelEO"); 
-      } else {
-	DslashDaggerKernelEOChem<<<GridDimension,BlockDimension>>>(out, device_table, device_phases, offset_g, offset_f);
-	cudaCheckError(AT,"DslashDaggerKernelEOChem"); 
-      }
-
-
-
-    }
-  
-  cudaSafe(AT,cudaUnbindTexture(fermion_texRef), "cudaUnbindTexture");
-  cudaSafe(AT,cudaUnbindTexture(gauge_texRef), "cudaUnbindTexture");
-
-  #ifdef DEBUG_MODE_2
-  printf("\033[32m\tterminated DslashOperator \033[0m\n");
-  #endif
-  }
 
 
 

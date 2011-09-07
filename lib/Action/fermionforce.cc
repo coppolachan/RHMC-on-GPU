@@ -12,13 +12,13 @@ void fermionforce(void)
   #ifdef DEBUG_MODE
   cout << "DEBUG: inside fermionforce ..."<<endl;
   #endif
-  complex<REAL> eim, emim;
+  complex<REAL> eim;
+
+  eim = complex<REAL>(1.0, 0.0);  //no chemical potential
 
   if (GlobalChemPotPar::Instance().UseChem()) {
     eim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(), 
 		      GlobalChemPotPar::Instance().getEim_sin());
-    emim=complex<REAL>(GlobalChemPotPar::Instance().getEim_cos(),
-		       -GlobalChemPotPar::Instance().getEim_sin());
   }
   
   int pseudofermion, iter, mu;
@@ -83,23 +83,15 @@ void fermionforce(void)
                 y=nnp[even][mu]-sizeh;     // sizeh<=nnp[even][mu]<size
                 vr_1=(loc_h->fermion[y]);
                 vr_2=~(loc_s->fermion[x]);
-                #ifdef IM_CHEM_POT
-                  vr_1*=(approx.RA_a[iter]*eim);
-                #else
-                  vr_1*=(approx.RA_a[iter]);
-                #endif
-                aux=(vr_1^vr_2);
+		vr_1*=(approx.RA_a[iter]*eim);
+		aux=(vr_1^vr_2);
                 (gauge_ipdot->ipdot[mu*size+even])+=aux;
 
                 y=nnp[odd][mu];
                 vr_1=(loc_s->fermion[y]);
                 vr_2=~(loc_h->fermion[x]);
-                #ifdef IM_CHEM_POT
-                  vr_1*=(-approx.RA_a[iter]*eim);
-                #else
-                  vr_1*=(-approx.RA_a[iter]);
-                #endif
-                aux=(vr_1^vr_2);
+		vr_1*=(-approx.RA_a[iter]*eim);
+		aux=(vr_1^vr_2);
                 (gauge_ipdot->ipdot[mu*size+odd])+=aux;
                 }
              } 

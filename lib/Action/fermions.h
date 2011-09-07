@@ -72,33 +72,33 @@ public:
 // MULTIPLE FERMIONS
 class MultiFermion {
 private:
- Vec3 fermion[no_ps][sizeh];
+  Vec3 **fermion;//[no_ps][sizeh];
 public:
- MultiFermion(void);
+  MultiFermion(void);
+  
+  friend void create_phi(void);
+  friend void extract_fermion(Fermion *out, MultiFermion *in, int i);
+  
+  // defined in Action/action.cc
+  friend void fermion_action(double *value, int init);
+  
+  // defined in FermionForce/fermionforce.cc
+  friend void fermionforce(void);
 
- friend void create_phi(void);
- friend void extract_fermion(Fermion *out, MultiFermion *in, int i);
-
- // defined in Action/action.cc
- friend void fermion_action(double *value, int init);
-
- // defined in FermionForce/fermionforce.cc
- friend void fermionforce(void);
-
- // defined in Inverter/inverter.cc
- friend void multips_shifted_invert (ShiftMultiFermion *chi, MultiFermion *phi, REAL res, RationalApprox approx);
-
- // defined in Inverter/cu_inverter.cc
- friend void cu_multips_shifted_invert (REAL res, RationalApprox approx);
-
- // defined in RationalApprox/rationalapprox.cc
- friend void first_inv_approx_calc(REAL res);
- friend void last_inv_approx_calc(REAL res);
-
- // defined in Packer/packer.cc
- friend void smartpack_multifermion(float out[6*sizeh*no_ps*2] , const MultiFermion *in);
- friend void smartunpack_multifermion(MultiFermion *out, const float in[6*sizeh*no_ps*2]);
- };
+  // defined in Inverter/inverter.cc
+  friend void multips_shifted_invert (ShiftMultiFermion *chi, MultiFermion *phi, REAL res, RationalApprox approx);
+  
+  // defined in Inverter/cu_inverter.cc
+  friend void cu_multips_shifted_invert (REAL res, RationalApprox approx);
+  
+  // defined in RationalApprox/rationalapprox.cc
+  friend void first_inv_approx_calc(REAL res);
+  friend void last_inv_approx_calc(REAL res);
+  
+  // defined in Packer/packer.cc
+  friend void smartpack_multifermion(float *out , const MultiFermion *in);
+  friend void smartunpack_multifermion(MultiFermion *out, const float *in);
+};
 
 // Initialize fermion_phi with gaussian random numbers
 void create_phi(void);
@@ -131,7 +131,7 @@ public:
  friend void last_inv_approx_calc(REAL res);
 
  // defined in Packer/packer.cc
- friend void smartunpack_multishiftfermion(ShiftMultiFermion *out, const float in[6*sizeh*max_approx_order*no_ps*2],  int order);
+ friend void smartunpack_multishiftfermion(ShiftMultiFermion *out, const float *in,  int order);
 };
 
 

@@ -10,8 +10,6 @@
 //#define REVERSIBILITY_TEST
 //#define PARAMETER_TEST
 
-//#define IM_CHEM_POT
-
 //#define PURE_GAUGE
 
 //#define NO_MEASURE

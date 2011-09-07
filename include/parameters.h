@@ -151,7 +151,6 @@ const int no_ps=2;                // number of pseudofermions
 const int approx_metro=15;
 //used in the approximation vectors
 
-
 //Rational approximations for MD
 const int approx_md=8;
 //used in the approximation vectors
