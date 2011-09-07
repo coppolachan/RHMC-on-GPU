@@ -24,6 +24,8 @@ Rand_Seed   0
 
 # Imaginary chemical potential (if used)
 # --------------------------------------
+# NO_CHEMPOT    no chemical potential
+# USE_CHEMPOT   use imaginary chemical potential
 ChemPotential   NO_CHEMPOT
 ImMu           0.248
 
