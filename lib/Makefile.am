@@ -1,8 +1,7 @@
 # Include Path
 CXXFLAGS += $(CUDA_COMPILE) $(MPFR_INCFLAGS) -Wall --pedantic
 INCFLAGS = -I. -I$(top_srcdir)
-LDFLAGS  += $(CUDA_LIBS) $(MPFR_LIB)
-#LDFLAGS  += 
+LIBS  += $(CUDA_LIBS) $(MPFR_LIB)
 
 AM_CPPFLAGS=-I$(top_srcdir)
 AM_CFLAGS  =-I$(top_srcdir)
