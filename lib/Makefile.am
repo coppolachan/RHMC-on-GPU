@@ -1,8 +1,7 @@
 # Include Path
 CXXFLAGS += $(CUDA_COMPILE) $(MPFR_INCFLAGS) -Wall --pedantic
 INCFLAGS = -I. -I$(top_srcdir)
-LDFLAGS  += $(CUDA_LIBS) $(MPFR_LIB)
-#LDFLAGS  += 
+LIBS  += $(CUDA_LIBS) $(MPFR_LIB)
 
 AM_CPPFLAGS=-I$(top_srcdir)
 AM_CFLAGS  =-I$(top_srcdir)
@@ -87,6 +86,7 @@ include_HEADERS = 	$(top_srcdir)/include/configuration.h	\
 	$(top_srcdir)/include/rhmc_include.h			\
 	$(top_srcdir)/include/tools.h				\
 	$(top_srcdir)/include/update.h				\
+	$(top_srcdir)/include/measurement.h			\
 	./Action/action.h				\
 	./Action/fermionforce.h				\
 	./Action/fermions.h				\

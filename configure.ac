@@ -4,7 +4,7 @@
 AC_PREREQ([2.59])
 AC_INIT(rhmc_staggered_cuda, 0.1.3, cossu@post.kek.jp)
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE([1.9 silent-rules -Wall -Werror foreign])
+AM_INIT_AUTOMAKE([1.9 -Wall -Werror foreign])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile lib/Makefile])
 
@@ -126,7 +126,8 @@ AC_SUBST(NVCCFLAGS)
 
 #####################################
 MPFR_DEVEL()
-
+AC_SUBST(MPFR_LIB)
+AC_SUBST(MPFR_INCFLAGS)
 
 
 # Checks for header files.

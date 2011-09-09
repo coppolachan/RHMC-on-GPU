@@ -47,7 +47,7 @@ AC_HELP_STRING([--with-mpfr=PATH],
 
 	case "$MPFR_libdir" in
 	  /usr/lib) ;;
-	  *) LDFLAGS="$LDFLAGS -L${MPFR_libdir} -lmpfr" ;;
+	  *) MPFR_LIB="-L${MPFR_libdir} -lmpfr -lgmp" ;;
 	esac
 
 
@@ -77,7 +77,8 @@ AC_HELP_STRING([--with-mpfr=PATH],
 
 	AC_MSG_RESULT([$MPFR_incdir])
 
-	CPPFLAGS="$CPPFLAGS -I${MPFR_incdir}"
+	MPFR_INCFLAGS="-I${MPFR_incdir}"
+
 
 	AC_MSG_CHECKING([that we can build MPFR programs])
 	AC_COMPILE_IFELSE(

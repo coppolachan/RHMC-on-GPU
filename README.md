@@ -70,6 +70,8 @@ of the library in your system
 
 ## 5. Known bugs
 
+ * Some older versions of `autoreconf` fail to build a working `configure` file. Usually the one shipped is working.
+
 If you find any bug please report any to the developers on GitHub issues:
 
 [RHMC on GPU issues](https://github.com/coppolachan/RHMC-on-GPU/issues)
