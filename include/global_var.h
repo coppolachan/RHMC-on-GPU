@@ -22,7 +22,7 @@ using namespace std;
 #endif
 
 
-static int update_iteration;
+GLOBAL int update_iteration;
 
 // eigenvalues
 static REAL min_stored=0.0;
